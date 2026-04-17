@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html class="dark" dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;900&amp;family=Manrope:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "primary": "#ffb4ab",
+                "surface-container-lowest": "#0f0e0e",
+                "error": "#ffb4ab",
+                "primary-fixed-dim": "#ffb4ab",
+                "on-primary": "#53211c",
+                "primary-container": "#4e1d19",
+                "primary-fixed": "#ffdad6",
+                "surface-dim": "#141313",
+                "tertiary": "#b0cbd1",
+                "surface-container-low": "#1c1b1b",
+                "inverse-on-surface": "#313030",
+                "surface-variant": "#363434",
+                "on-tertiary": "#1b3439",
+                "secondary-fixed-dim": "#dfc1a9",
+                "on-tertiary-fixed-variant": "#324b50",
+                "tertiary-container": "#173035",
+                "outline-variant": "#534341",
+                "on-secondary": "#3f2d1c",
+                "inverse-surface": "#e6e1e1",
+                "on-secondary-fixed-variant": "#574331",
+                "inverse-primary": "#8b4d47",
+                "on-secondary-container": "#d0b39c",
+                "surface-container": "#201f1f",
+                "secondary": "#dfc1a9",
+                "secondary-container": "#5a4533",
+                "on-secondary-fixed": "#281809",
+                "on-primary-fixed-variant": "#6e3631",
+                "surface-container-high": "#2b2a2a",
+                "on-surface": "#e6e1e1",
+                "background": "#141313",
+                "error-container": "#93000a",
+                "surface-container-highest": "#363434",
+                "on-surface-variant": "#d8c2bf",
+                "on-primary-fixed": "#380c0a",
+                "on-tertiary-fixed": "#041f24",
+                "secondary-fixed": "#fcddc4",
+                "surface-tint": "#ffb4ab",
+                "on-primary-container": "#c98179",
+                "surface": "#141313",
+                "on-error-container": "#ffdad6",
+                "surface-bright": "#3a3939",
+                "tertiary-fixed": "#cce7ed",
+                "on-error": "#690005",
+                "on-background": "#e6e1e1",
+                "outline": "#a08c8a",
+                "tertiary-fixed-dim": "#b0cbd1",
+                "on-tertiary-container": "#7e989e"
+            },
+            "borderRadius": {
+                "DEFAULT": "0px",
+                "lg": "0px",
+                "xl": "0px",
+                "full": "9999px"
+            },
+            "fontFamily": {
+                "headline": ["Epilogue", "sans-serif"],
+                "body": ["Manrope", "sans-serif"],
+                "label": ["Manrope", "sans-serif"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #141313;
+            color: #e6e1e1;
+            font-family: 'Manrope', sans-serif;
+        }
+        h1, h2, h3 {
+            font-family: 'Epilogue', sans-serif;
+        }
+    </style>
+</head>
+<body class="selection:bg-primary selection:text-on-primary">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 h-20 bg-stone-950/80 backdrop-blur-md flex justify-between items-center px-6 md:px-12 w-full h-full">
+<div class="text-2xl font-black tracking-tighter text-red-200">
+            رونق
+        </div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-red-300 font-bold border-b-2 border-red-300 pb-1 font-['Epilogue'] text-lg" href="#">الرئيسية</a>
+<a class="text-stone-400 hover:text-stone-100 transition-colors font-['Epilogue'] text-lg" href="#about">من نحن</a>
+<a class="text-stone-400 hover:text-stone-100 transition-colors font-['Epilogue'] text-lg" href="#services">خدماتنا</a>
+<a class="text-stone-400 hover:text-stone-100 transition-colors font-['Epilogue'] text-lg" href="#projects">مشاريعنا</a>
+<a class="text-stone-400 hover:text-stone-100 transition-colors font-['Epilogue'] text-lg" href="#contact">اتصل بنا</a>
+</div>
+<button class="bg-primary px-6 py-2 text-on-primary font-bold hover:bg-on-primary-container transition-all duration-300 scale-95 md:scale-100">
+            طلب عرض سعر
+        </button>
+</nav>
+<main>
+<!-- Hero Section -->
+<section class="relative h-screen w-full overflow-hidden flex items-center pt-20">
+<div class="absolute inset-0 z-0">
+<img alt="Architectural Modern Building" class="w-full h-full object-cover grayscale opacity-40" data-alt="dramatic low angle shot of a sleek modern skyscraper with glass facade reflecting a dark sky at dusk, architectural precision" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA73YROwfkoBCB_nF4pNnHldL_wyQxh_ba8zx60aRCQAR-u8D-fRtsqIMnObd_mMkSxiys9YtIqii7jV5-QtXnlx8M3SBkR9Ee8o5OvZaXjjVWvRprdrS09ivqXuf5BsuFCOQ34yOtW0b8y8VCN74il8d9ZOusDWgpe9lLcn0hlncboEw1-eBkr9vEIt01yKqWQAPJtQa4FlFts-THMnf-DdUZybKPo_Cz3aecYIiD5i97bP6ZTDBlrfZSazk2aMpROomzQFlHEW9A"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+</div>
+<div class="container mx-auto px-6 md:px-12 relative z-10">
+<div class="max-w-4xl">
+<span class="text-primary tracking-[0.3em] uppercase text-sm mb-6 block font-label font-bold">RONAQ CONTRACTING</span>
+<h1 class="text-5xl md:text-8xl font-black leading-tight mb-8">
+                        رونق.. تجسيد للذوق الرفيع في كل ما حولك
+                    </h1>
+<div class="flex flex-col md:flex-row gap-6">
+<a class="inline-block bg-primary text-on-primary px-10 py-5 text-xl font-bold hover:bg-on-primary-container transition-colors text-center" href="#contact">
+                            ابدأ مشروعك الآن
+                        </a>
+<a class="inline-block border border-outline-variant/30 px-10 py-5 text-xl font-bold hover:bg-surface-container-high transition-colors text-center" href="#projects">
+                            استكشف أعمالنا
+                        </a>
+</div>
+</div>
+</div>
+</section>
+<!-- About Us Section -->
+<section class="py-32 bg-surface" id="about">
+<div class="container mx-auto px-6 md:px-12">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+<div class="relative">
+<div class="aspect-[4/5] bg-surface-container-high overflow-hidden">
+<img alt="Modern Architecture Interior" class="w-full h-full object-cover" data-alt="interior view of a minimalist concrete building with sharp angles and natural light pouring through high windows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1nhPhpg-FrM8cFuwb3w3llf3sw39EHrQzMb2zOjaT8AHWFlUBeNKkaX4Us1i0dSRuzeYyeywLjSo7YuRMyP_-KuPFQ3ToPQ21onWG-jZMaXvwv6jWVE4KK5fCpGvj3hIa-Mkhd6geMi-x_Lj2WNU6U5a2GMttZAA55v5nvijsZRh5-QSiW8Fm_i_2X2PB8euZgRuredepskj3oySgsLizWzwdgStAxnsFkuxElcq60dQ4X1fxoi8voA34st9azgNBWGlySWVRBy4"/>
+</div>
+<div class="absolute -bottom-10 -left-10 w-64 h-64 bg-primary-container/20 backdrop-blur-3xl -z-10"></div>
+</div>
+<div class="space-y-8">
+<div class="inline-block px-4 py-1 border border-primary/20 text-primary text-xs tracking-widest font-bold">رؤيتنا</div>
+<h2 class="text-4xl md:text-6xl font-black text-on-surface">من نحن</h2>
+<p class="text-xl text-on-surface-variant leading-relaxed font-light">
+                            نحن شركة رائدة في قطاع المقاولات، نسعى دائماً لتقديم حلول مبتكرة تجمع بين العصرية والجمال. نؤمن بأن كل مبنى يروي قصة، ومهمتنا هي تحويل تطلعات عملائنا إلى واقع ملموس يتسم بالرقي والصلابة.
+                        </p>
+<div class="pt-8 border-t border-outline-variant/10 grid grid-cols-2 gap-8">
+<div>
+<div class="text-4xl font-black text-primary mb-2">15+</div>
+<div class="text-sm uppercase tracking-wider text-on-surface-variant">عاماً من الخبرة</div>
+</div>
+<div>
+<div class="text-4xl font-black text-primary mb-2">200+</div>
+<div class="text-sm uppercase tracking-wider text-on-surface-variant">مشروع مكتمل</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Services Section (Bento Grid) -->
+<section class="py-32 bg-surface-container-low" id="services">
+<div class="container mx-auto px-6 md:px-12">
+<div class="text-center mb-24">
+<h2 class="text-4xl md:text-7xl font-black mb-6">خدماتنا الهندسية</h2>
+<div class="w-24 h-1 bg-primary mx-auto"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<!-- Bento Item 1: 3D Design -->
+<div class="md:col-span-2 md:row-span-2 bg-surface-container-highest p-12 flex flex-col justify-between hover:bg-primary-container transition-colors group">
+<span class="material-symbols-outlined text-primary text-5xl group-hover:text-on-primary-container transition-colors" data-icon="architecture">architecture</span>
+<div>
+<h3 class="text-3xl font-bold mb-4">تصاميم 3D</h3>
+<p class="text-on-surface-variant">رؤية مستقبلية لمشروعك قبل البدء، بدقة متناهية وتفاصيل واقعية تضمن رضاكم.</p>
+</div>
+</div>
+<!-- Bento Item 2: Finishing -->
+<div class="bg-surface-container p-8 border border-outline-variant/5 hover:border-primary/20 transition-all">
+<span class="material-symbols-outlined text-secondary text-3xl mb-6" data-icon="format_paint">format_paint</span>
+<h3 class="text-xl font-bold mb-2">تنفيذ التشطيبات</h3>
+<p class="text-sm text-on-surface-variant">دقة في التفاصيل النهائية تضفي لمسة من الفخامة على مساحاتكم.</p>
+</div>
+<!-- Bento Item 3: Bone Structure -->
+<div class="bg-surface-container p-8 border border-outline-variant/5 hover:border-primary/20 transition-all">
+<span class="material-symbols-outlined text-secondary text-3xl mb-6" data-icon="foundation">foundation</span>
+<h3 class="text-xl font-bold mb-2">تنفيذ العظم</h3>
+<p class="text-sm text-on-surface-variant">تأسيس قوي ومتين يتبع أعلى معايير السلامة والجودة العالمية.</p>
+</div>
+<!-- Bento Item 4: Engineering -->
+<div class="md:col-span-2 bg-surface-container-high p-8 flex items-center gap-8 border border-outline-variant/5">
+<span class="material-symbols-outlined text-primary text-4xl" data-icon="square_foot">square_foot</span>
+<div>
+<h3 class="text-xl font-bold mb-1">التصميم الهندسي</h3>
+<p class="text-sm text-on-surface-variant">مخططات مبتكرة تراعي الاستغلال الأمثل للمساحات وتوفر الأمان.</p>
+</div>
+</div>
+<!-- Bento Item 5: Insulation -->
+<div class="bg-surface-container p-8 border border-outline-variant/5 hover:border-primary/20 transition-all">
+<span class="material-symbols-outlined text-secondary text-3xl mb-6" data-icon="layers">layers</span>
+<h3 class="text-xl font-bold mb-2">أعمال العزل</h3>
+<p class="text-sm text-on-surface-variant">حماية تامة من العوامل الجوية لضمان ديمومة المبنى وراحة السكان.</p>
+</div>
+<!-- Bento Item 6: Aluminum -->
+<div class="bg-surface-container p-8 border border-outline-variant/5 hover:border-primary/20 transition-all">
+<span class="material-symbols-outlined text-secondary text-3xl mb-6" data-icon="window">window</span>
+<h3 class="text-xl font-bold mb-2">أعمال الألمنيوم</h3>
+<p class="text-sm text-on-surface-variant">تركيبات عصرية تجمع بين المتانة والأناقة بلمسات فنية.</p>
+</div>
+<!-- Bento Item 7: Decor & Furniture (Wide bottom) -->
+<div class="md:col-span-2 bg-stone-900 p-8 flex justify-between items-center border border-outline-variant/10">
+<div>
+<h3 class="text-xl font-bold mb-2">أعمال الديكور وتفصيل الأثاث</h3>
+<p class="text-sm text-on-surface-variant">قطع فنية مخصصة تناسب ذوقكم الرفيع وتكمل جمال المكان.</p>
+</div>
+<span class="material-symbols-outlined text-primary text-4xl" data-icon="chair">chair</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Values Section -->
+<section class="py-32 bg-background border-t border-outline-variant/5">
+<div class="container mx-auto px-6 md:px-12">
+<div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+<div class="max-w-xl">
+<h2 class="text-5xl font-black mb-4">قيمنا الجوهرية</h2>
+<p class="text-on-surface-variant">ما يميز رونق هو التزامنا الثابت بمجموعة من المبادئ التي تضمن نجاح كل مشروع وتفوقنا في السوق.</p>
+</div>
+<div class="text-8xl font-black text-outline-variant/10 select-none">VALUES</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+<div class="p-10 bg-surface-container-low border-r-4 border-primary">
+<span class="material-symbols-outlined text-primary text-4xl mb-6" data-icon="verified">verified</span>
+<h3 class="text-2xl font-bold mb-4">الجودة العالية</h3>
+<p class="text-on-surface-variant leading-relaxed">نستخدم أفضل المواد ونطبق أدق معايير الرقابة لضمان مخرجات تفوق التوقعات.</p>
+</div>
+<div class="p-10 bg-surface-container-low border-r-4 border-secondary">
+<span class="material-symbols-outlined text-secondary text-4xl mb-6" data-icon="schedule">schedule</span>
+<h3 class="text-2xl font-bold mb-4">الالتزام بالوقت</h3>
+<p class="text-on-surface-variant leading-relaxed">نحترم مواعيد التسليم بدقة متناهية، فالاحترافية تبدأ من تقدير وقت العميل.</p>
+</div>
+<div class="p-10 bg-surface-container-low border-r-4 border-primary">
+<span class="material-symbols-outlined text-primary text-4xl mb-6" data-icon="handshake">handshake</span>
+<h3 class="text-2xl font-bold mb-4">الشفافية التامة</h3>
+<p class="text-on-surface-variant leading-relaxed">وضوح كامل في التعاملات والأسعار والخطط الزمنية منذ اللحظة الأولى.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Projects Callout (Visual Interruption) -->
+<section class="h-[614px] relative overflow-hidden group">
+<img alt="Luxury Villa Design" class="w-full h-full object-cover grayscale transition-transform duration-700 group-hover:scale-110" data-alt="ultra-luxury modern villa with infinity pool and dramatic architectural lighting at night, high-end construction" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrFUqvu2uHFW8OrwGiSa_4fb9wRLTjURCw8viWkLV547tvr5n2FrucvPpWWzYHQ-cnAKkXDEybjYPlO-8qx8_3jvOYdLmQbennEdfA7T0YLktNrCgH_NzvmQ0vRWbPbHHyELdHzSG3hPqt64dsTSWn6tuX2fX_VBUo4Z1QjWESvmghK_TC_vFtvF4yIle0gdqB-qcrtR0M-NTNZ7JBcY5zKxb5YYfVzxU_ULrVNcgxgxQMk-9PGw2b33EL-KR9UeOZiP4aN6daa3U"/>
+<div class="absolute inset-0 bg-stone-950/60 flex flex-col items-center justify-center text-center p-6">
+<h2 class="text-4xl md:text-6xl font-black mb-8 max-w-2xl">نبني أحلامكم بدقة هندسية وروح إبداعية</h2>
+<a class="px-12 py-4 border-2 border-primary text-primary font-bold hover:bg-primary hover:text-on-primary transition-all" href="#projects">مشاهدة معرض المشاريع</a>
+</div>
+</section>
+<!-- Contact Section -->
+<section class="py-32 bg-surface" id="contact">
+<div class="container mx-auto px-6 md:px-12">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-24">
+<div>
+<h2 class="text-5xl font-black mb-8">تواصل معنا</h2>
+<p class="text-xl text-on-surface-variant mb-12">نحن هنا للإجابة على استفساراتكم ومناقشة مشروعكم القادم. فريقنا جاهز لتقديم الاستشارات الفنية المتخصصة.</p>
+<div class="space-y-8">
+<div class="flex items-center gap-6 group">
+<div class="w-16 h-16 bg-surface-container-high flex items-center justify-center group-hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-on-primary" data-icon="call">call</span>
+</div>
+<div>
+<div class="text-sm text-on-surface-variant uppercase font-bold tracking-widest">الهاتف</div>
+<div class="text-2xl font-bold ltr">0533611830</div>
+</div>
+</div>
+<div class="flex items-center gap-6 group">
+<div class="w-16 h-16 bg-surface-container-high flex items-center justify-center group-hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-on-primary" data-icon="mail">mail</span>
+</div>
+<div>
+<div class="text-sm text-on-surface-variant uppercase font-bold tracking-widest">البريد الإلكتروني</div>
+<div class="text-2xl font-bold">info@ronaq.sa</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low p-8 md:p-12">
+<form class="space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-xs uppercase font-bold text-on-surface-variant">الاسم الكامل</label>
+<input class="w-full bg-transparent border-b border-outline-variant/30 py-3 focus:border-primary transition-colors outline-none" placeholder="اكتب اسمك هنا" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs uppercase font-bold text-on-surface-variant">رقم الجوال</label>
+<input class="w-full bg-transparent border-b border-outline-variant/30 py-3 focus:border-primary transition-colors outline-none text-right" placeholder="05xxxxxxxx" type="tel"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-xs uppercase font-bold text-on-surface-variant">نوع المشروع</label>
+<select class="w-full bg-transparent border-b border-outline-variant/30 py-3 focus:border-primary transition-colors outline-none">
+<option class="bg-surface-container">سكني</option>
+<option class="bg-surface-container">تجاري</option>
+<option class="bg-surface-container">تصميم داخلي</option>
+<option class="bg-surface-container">أخرى</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="text-xs uppercase font-bold text-on-surface-variant">رسالتك</label>
+<textarea class="w-full bg-transparent border-b border-outline-variant/30 py-3 focus:border-primary transition-colors outline-none resize-none" placeholder="كيف يمكننا مساعدتك؟" rows="4"></textarea>
+</div>
+<button class="w-full bg-primary py-5 text-on-primary font-black text-xl hover:bg-on-primary-container transition-all">إرسال الطلب</button>
+</form>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-stone-950 border-t border-stone-800/20">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 px-12 py-20 max-w-full">
+<div class="md:col-span-2">
+<div class="text-3xl font-black text-red-200 mb-6">رونق</div>
+<p class="text-stone-500 font-['Manrope'] text-sm leading-relaxed max-w-sm">نحن شركاؤكم في بناء المستقبل. نقدم خدمات مقاولات متكاملة بمواصفات عالمية، نجمع فيها بين الخبرة والإبداع لتقديم نتائج تدوم طويلاً.</p>
+</div>
+<div>
+<h4 class="text-red-300 font-bold mb-6 font-['Epilogue']">روابط سريعة</h4>
+<ul class="space-y-4">
+<li><a class="text-stone-500 hover:text-red-200 transition-opacity font-['Manrope'] text-sm" href="#">الرئيسية</a></li>
+<li><a class="text-stone-500 hover:text-red-200 transition-opacity font-['Manrope'] text-sm" href="#">مشاريعنا</a></li>
+<li><a class="text-stone-500 hover:text-red-200 transition-opacity font-['Manrope'] text-sm" href="#">خدماتنا</a></li>
+<li><a class="text-stone-500 hover:text-red-200 transition-opacity font-['Manrope'] text-sm" href="#">الخصوصية</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-red-300 font-bold mb-6 font-['Epilogue']">ساعات العمل</h4>
+<p class="text-stone-500 font-['Manrope'] text-sm mb-2">الأحد - الخميس</p>
+<p class="text-on-surface font-bold text-sm">08:00 صباحاً - 05:00 مساءً</p>
+<div class="flex gap-4 mt-8">
+<a class="w-10 h-10 bg-stone-900 flex items-center justify-center hover:bg-primary hover:text-on-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="public">public</span>
+</a>
+<a class="w-10 h-10 bg-stone-900 flex items-center justify-center hover:bg-primary hover:text-on-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="share">share</span>
+</a>
+</div>
+</div>
+</div>
+<div class="px-12 py-8 border-t border-stone-800/20 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-stone-500 font-['Manrope'] text-sm leading-relaxed">© ٢٠٢٤ رونق للمقاولات. جميع الحقوق محفوظة.</p>
+<div class="flex gap-8">
+<a class="text-stone-500 hover:text-red-200 transition-opacity font-['Manrope'] text-sm" href="#">الخصوصية</a>
+<a class="text-stone-500 hover:text-red-200 transition-opacity font-['Manrope'] text-sm" href="#">الشروط والأحكام</a>
+<a class="text-stone-500 hover:text-red-200 transition-opacity font-['Manrope'] text-sm" href="#">خريطة الموقع</a>
+</div>
+</div>
+</footer>
+</body></html>
