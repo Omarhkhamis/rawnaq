@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowUpLeft, Clock3, Mail, MapPin, Phone } from "lucide-react";
 
 import { navigation, services, siteConfig } from "@/data/site";
+import { SiteBrand } from "@/components/layout/site-brand";
 
 export function SiteFooter() {
   return (
@@ -10,7 +11,9 @@ export function SiteFooter() {
         <div className="grid gap-10 lg:grid-cols-[1.1fr_0.7fr_0.7fr_0.9fr]">
           <div className="space-y-5">
             <div className="space-y-2">
-              <div className="font-display text-3xl font-bold text-text">{siteConfig.name}</div>
+              <Link aria-label={siteConfig.name} className="inline-flex items-center" href="/">
+                <SiteBrand className="h-auto w-[6rem] md:w-[7rem]" />
+              </Link>
               <p className="max-w-md text-sm leading-7 text-text-muted">
                 نحن نبني بأسلوب يتجاوز مجرد التشييد؛ نصمم وننفذ مساحات تعكس قيمة العميل وتخدم أهدافه التشغيلية والجمالية.
               </p>

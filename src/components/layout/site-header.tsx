@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 
 import { navigation, siteConfig } from "@/data/site";
 import { cn } from "@/lib/utils";
+import { SiteBrand } from "@/components/layout/site-brand";
 import { Button } from "@/components/ui/button";
 
 export function SiteHeader() {
@@ -29,18 +30,8 @@ export function SiteHeader() {
     <header className="fixed inset-x-0 top-4 z-50">
       <div className="app-container">
         <div className="panel flex items-center justify-between px-4 py-3 md:px-6">
-          <Link className="flex items-center gap-3" href="/">
-            <div className="flex size-11 items-center justify-center rounded-full border border-primary/25 bg-primary/12 text-primary">
-              ر
-            </div>
-            <div>
-              <div className="font-display text-lg font-bold tracking-tight text-text md:text-xl">
-                {siteConfig.shortName}
-              </div>
-              <div className="font-accent text-[0.65rem] uppercase tracking-[0.35em] text-text-muted">
-                contracting
-              </div>
-            </div>
+          <Link aria-label={siteConfig.name} className="flex shrink-0 items-center" href="/">
+            <SiteBrand className="h-auto w-[4.5rem] md:w-[5rem]" priority />
           </Link>
 
           <nav className="hidden items-center gap-8 lg:flex">

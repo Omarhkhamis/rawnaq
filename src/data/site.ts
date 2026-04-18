@@ -93,6 +93,8 @@ export const siteConfig = {
   name: "رونق للمقاولات",
   shortName: "رونق",
   englishName: "RONAQ CONTRACTING",
+  logoPath: "/brand/rawnaq-logo.png",
+  faviconPath: "/brand/rawnaq-favicon.png",
   description:
     "شركة مقاولات تقدم حلولاً متكاملة في التصميم والتنفيذ وإدارة المشاريع بهوية عصرية ومعايير تنفيذ عالية.",
   phone: "+966 500 000 000",
