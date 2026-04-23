@@ -1,33 +1,32 @@
-import { workflow } from "@/data/site";
+import type { WorkflowSectionData } from "@/lib/content/types";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 
-export function ProcessSection() {
+type ProcessSectionProps = {
+  section: WorkflowSectionData;
+};
+
+export function ProcessSection({ section }: ProcessSectionProps) {
   return (
     <section className="section-space">
       <div className="app-container">
         <div className="grid gap-8 lg:grid-cols-[0.82fr_1.18fr]">
           <div className="space-y-6 lg:sticky lg:top-28 lg:h-fit">
-            <SectionHeading
-              eyebrow="مسار العمل"
-              title="آلية تنفيذ مدروسة تمنح العميل وضوحاً وثقة في كل مرحلة"
-            />
+            <SectionHeading eyebrow={section.eyebrow} title={section.title} />
             <Reveal delay={0.1}>
               <div className="panel px-6 py-6">
-                <p className="text-center font-display text-xl font-bold leading-[1.45] text-text md:text-start md:text-2xl">تنسيق واحد لكل التخصصات</p>
-                <p className="mt-3 leading-8 text-text-muted">
-                  الهدف هو تقليل الفجوة بين ما يُعتمد على الورق وما يُنفذ في الموقع، مع ضبط الجودة والزمن والتكلفة ضمن مسار واحد.
-                </p>
+                <p className="text-center font-display text-xl font-bold leading-[1.45] text-text md:text-start md:text-2xl">{section.summaryTitle}</p>
+                <p className="mt-3 leading-8 text-text-muted">{section.summaryDescription}</p>
                 <Button className="mt-5" href="/#contact" variant="outline">
-                  ناقش مشروعك معنا
+                  {section.ctaLabel}
                 </Button>
               </div>
             </Reveal>
           </div>
 
           <div className="space-y-4">
-            {workflow.map((item, index) => (
+            {section.items.map((item, index) => (
               <Reveal className="panel px-6 py-6 md:px-8" delay={index * 0.08} key={item.step}>
                 <div className="grid gap-4 md:grid-cols-[auto_1fr] md:items-start">
                   <div className="font-accent text-5xl font-bold leading-none text-primary/85">

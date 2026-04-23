@@ -1,12 +1,20 @@
 import { ArrowUpLeft } from "lucide-react";
 
-import { projects } from "@/data/site";
+import type { Project } from "@/data/site";
 import { Button } from "@/components/ui/button";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { ProjectCard } from "@/components/projects/project-card";
 
-export function FeaturedProjectsSection() {
+type FeaturedProjectsSectionProps = {
+  projects: Project[];
+};
+
+export function FeaturedProjectsSection({ projects }: FeaturedProjectsSectionProps) {
   const [featured, ...rest] = projects;
+
+  if (!featured) {
+    return null;
+  }
 
   return (
     <section className="section-space" id="projects">
@@ -14,7 +22,7 @@ export function FeaturedProjectsSection() {
         <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <SectionHeading
             eyebrow="معرض المشاريع"
-            title="أعمال تُترجم الرؤية المعمارية إلى مساحات قابلة للعيش والعمل"
+            title="أعمال تترجم الرؤية المعمارية إلى مساحات قابلة للعيش والعمل"
           />
           <Button href="/projects" size="lg" variant="outline">
             عرض جميع المشاريع

@@ -1,23 +1,28 @@
 import Image from "next/image";
 import { ArrowUpLeft, BadgeCheck, MapPin } from "lucide-react";
 
-import { heroHighlights, homeProjectHero, homeStats } from "@/data/site";
+import type { DashboardProject, HeroSectionData } from "@/lib/content/types";
 import { Button } from "@/components/ui/button";
 import { AnimatedCounter } from "@/components/ui/counter";
 import { ParallaxMedia } from "@/components/ui/parallax-media";
 import { Reveal } from "@/components/ui/reveal";
 
-export function HomeHero() {
+type HomeHeroProps = {
+  section: HeroSectionData;
+  project: DashboardProject | null;
+};
+
+export function HomeHero({ section, project }: HomeHeroProps) {
   return (
     <section className="relative overflow-hidden pb-14 pt-32 md:pb-20 md:pt-40">
       <div className="absolute inset-0 -z-20">
         <Image
-          alt="برج معماري حديث بواجهة زجاجية في أجواء مسائية"
+          alt={section.backgroundAlt}
           className="object-cover object-center opacity-18"
           fill
           priority
           sizes="100vw"
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuA73YROwfkoBCB_nF4pNnHldL_wyQxh_ba8zx60aRCQAR-u8D-fRtsqIMnObd_mMkSxiys9YtIqii7jV5-QtXnlx8M3SBkR9Ee8o5OvZaXjjVWvRprdrS09ivqXuf5BsuFCOQ34yOtW0b8y8VCN74il8d9ZOusDWgpe9lLcn0hlncboEw1-eBkr9vEIt01yKqWQAPJtQa4FlFts-THMnf-DdUZybKPo_Cz3aecYIiD5i97bP6ZTDBlrfZSazk2aMpROomzQFlHEW9A"
+          src={section.backgroundImage}
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,19,19,0.38),rgba(20,19,19,0.84)_55%,rgba(20,19,19,1))]" />
       </div>
@@ -30,20 +35,20 @@ export function HomeHero() {
             <div className="space-y-6">
               <Reveal>
                 <h1 className="text-balance text-center font-display text-4xl font-bold leading-[1.35] tracking-normal text-text md:text-start md:text-6xl md:leading-[1.25] xl:text-[4.8rem]">
-                  رونق.. تجسيد للذوق الرفيع في كل ما حولك
+                  {section.heading}
                 </h1>
               </Reveal>
 
               <Reveal delay={0.08}>
                 <p className="max-w-2xl text-lg leading-8 text-text-muted md:text-xl">
-                  شركة مقاولات متخصصة في بناء تجارب معمارية متكاملة تبدأ من الفكرة، وتعبر بالتصميم والتنفيذ، وتنتهي بتسليم يليق بطموح العميل.
+                  {section.description}
                 </p>
               </Reveal>
             </div>
 
             <Reveal delay={0.18}>
               <div className="flex flex-wrap gap-3">
-                {heroHighlights.map((item) => (
+                {section.highlights.map((item) => (
                   <span
                     className="rounded-full border border-white/8 bg-white/5 px-4 py-2 text-sm text-text-muted"
                     key={item}
@@ -57,17 +62,17 @@ export function HomeHero() {
             <Reveal delay={0.24}>
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Button href="/#contact" size="lg">
-                  ابدأ مشروعك الآن
+                  {section.primaryButtonLabel}
                   <ArrowUpLeft className="size-4" />
                 </Button>
                 <Button href="/projects" size="lg" variant="outline">
-                  استكشف أعمالنا
+                  {section.secondaryButtonLabel}
                 </Button>
               </div>
             </Reveal>
 
             <div className="grid gap-4 md:grid-cols-3">
-              {homeStats.map((stat, index) => (
+              {section.stats.map((stat, index) => (
                 <Reveal className="h-full" delay={0.3 + index * 0.07} key={stat.label}>
                   <div className="panel h-full px-5 py-6">
                     <div className="mb-2 text-4xl font-bold text-primary md:text-5xl">
@@ -82,38 +87,42 @@ export function HomeHero() {
           </div>
 
           <Reveal className="relative" delay={0.18}>
-            <ParallaxMedia
-              className="architect-frame panel min-h-[34rem] md:min-h-[42rem]"
-              innerClassName="relative min-h-[34rem] md:min-h-[42rem]"
-            >
-              <Image
-                alt={homeProjectHero.heroAlt}
-                className="object-cover object-center"
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 46vw"
-                src={homeProjectHero.cardImage}
-              />
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(13,12,11,0.18),rgba(13,12,11,0.08)_28%,rgba(13,12,11,0.42)_72%,rgba(13,12,11,0.64))]" />
-            </ParallaxMedia>
+            {project ? (
+              <>
+                <ParallaxMedia
+                  className="architect-frame panel min-h-[34rem] md:min-h-[42rem]"
+                  innerClassName="relative min-h-[34rem] md:min-h-[42rem]"
+                >
+                  <Image
+                    alt={project.heroAlt}
+                    className="object-cover object-center"
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 46vw"
+                    src={project.cardImage}
+                  />
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(13,12,11,0.18),rgba(13,12,11,0.08)_28%,rgba(13,12,11,0.42)_72%,rgba(13,12,11,0.64))]" />
+                </ParallaxMedia>
 
-            <div className="absolute inset-x-6 bottom-6 space-y-4">
-              <div className="panel max-w-sm px-5 py-4 backdrop-blur-xl">
-                <div className="mb-2 flex items-center gap-2 text-primary">
-                  <BadgeCheck className="size-4" />
-                  <span className="text-sm font-semibold">مشروع مميز</span>
+                <div className="absolute inset-x-6 bottom-6 space-y-4">
+                  <div className="panel max-w-sm px-5 py-4 backdrop-blur-xl">
+                    <div className="mb-2 flex items-center gap-2 text-primary">
+                      <BadgeCheck className="size-4" />
+                      <span className="text-sm font-semibold">{section.badgeText}</span>
+                    </div>
+                    <p className="text-center font-display text-xl font-bold leading-[1.45] text-text md:text-start md:text-2xl">{project.title}</p>
+                    <div className="mt-3 flex items-center gap-2 text-sm text-text-muted">
+                      <MapPin className="size-4 text-primary" />
+                      <span>{project.location}</span>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-center font-display text-xl font-bold leading-[1.45] text-text md:text-start md:text-2xl">{homeProjectHero.title}</p>
-                <div className="mt-3 flex items-center gap-2 text-sm text-text-muted">
-                  <MapPin className="size-4 text-primary" />
-                  <span>{homeProjectHero.location}</span>
-                </div>
-              </div>
-            </div>
+              </>
+            ) : null}
 
             <div className="animate-float absolute -left-2 top-10 hidden rounded-[1.5rem] border border-white/10 bg-black/30 px-5 py-4 shadow-2xl backdrop-blur-xl md:block">
-              <p className="text-sm text-text-muted">من الفكرة إلى التسليم</p>
-              <p className="mt-2 text-center font-display text-xl font-bold leading-[1.45] text-text md:text-start md:text-2xl">حل متكامل تحت سقف واحد</p>
+              <p className="text-sm text-text-muted">{section.floatingLabel}</p>
+              <p className="mt-2 text-center font-display text-xl font-bold leading-[1.45] text-text md:text-start md:text-2xl">{section.floatingTitle}</p>
             </div>
           </Reveal>
         </div>

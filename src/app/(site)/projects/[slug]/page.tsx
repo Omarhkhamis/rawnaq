@@ -4,27 +4,27 @@ import Link from "next/link";
 import { Check, ChevronLeft, MapPin } from "lucide-react";
 import { notFound } from "next/navigation";
 
-import { ContactCtaSection } from "@/components/sections/contact-cta-section";
 import { ProjectCard } from "@/components/projects/project-card";
+import { ContactCtaSection } from "@/components/sections/contact-cta-section";
 import { AnimatedCounter } from "@/components/ui/counter";
 import { FeatureIcon } from "@/components/ui/feature-icon";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { getProjectBySlug, getRelatedProjects, projects } from "@/data/site";
+import {
+  getProjectBySlug,
+  getPublicSiteContent,
+  getRelatedProjects,
+} from "@/lib/content/repository";
+
+export const dynamic = "force-dynamic";
 
 type ProjectPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export async function generateStaticParams() {
-  return projects.map((project) => ({
-    slug: project.slug,
-  }));
-}
-
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const project = getProjectBySlug(slug);
+  const project = await getProjectBySlug(slug);
 
   if (!project) {
     return {
@@ -40,13 +40,15 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { slug } = await params;
-  const project = getProjectBySlug(slug);
+  const [project, relatedProjects, content] = await Promise.all([
+    getProjectBySlug(slug),
+    getRelatedProjects(slug),
+    getPublicSiteContent(),
+  ]);
 
   if (!project) {
     notFound();
   }
-
-  const relatedProjects = getRelatedProjects(project.slug);
 
   return (
     <>
@@ -114,9 +116,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
             <div className="space-y-8">
               <SectionHeading
+                description={project.overview}
                 eyebrow="نظرة عامة على المشروع"
                 title="صياغة معمارية تجمع بين الأداء اليومي والحضور البصري"
-                description={project.overview}
               />
 
               <Reveal>
@@ -231,9 +233,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         <div className="app-container">
           <div className="grid gap-8 lg:grid-cols-[1fr_0.85fr]">
             <div>
-              <SectionHeading
-                title="نتائج العمل"
-              />
+              <SectionHeading title="نتائج العمل" />
               <div className="mt-10 grid gap-4 sm:grid-cols-2">
                 {project.results.map((result, index) => (
                   <Reveal className="panel px-6 py-6" delay={index * 0.07} key={result.label}>
@@ -275,18 +275,13 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
           <div className="grid gap-5 lg:grid-cols-2">
             {relatedProjects.map((related, index) => (
-              <ProjectCard
-                compact
-                delay={index * 0.08}
-                key={related.slug}
-                project={related}
-              />
+              <ProjectCard compact delay={index * 0.08} key={related.slug} project={related} />
             ))}
           </div>
         </div>
       </section>
 
-      <ContactCtaSection />
+      <ContactCtaSection section={content.sections.contact} />
     </>
   );
 }

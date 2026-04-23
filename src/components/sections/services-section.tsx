@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { services } from "@/data/site";
+import type { ServicesSectionData } from "@/lib/content/types";
 import { cn } from "@/lib/utils";
 import { FeatureIcon } from "@/components/ui/feature-icon";
 import { Reveal } from "@/components/ui/reveal";
@@ -12,20 +12,25 @@ const layoutMap = {
   wide: "lg:col-span-2 min-h-[18rem]",
 } as const;
 
-export function ServicesSection() {
+type ServicesSectionProps = {
+  section: ServicesSectionData;
+};
+
+export function ServicesSection({ section }: ServicesSectionProps) {
   return (
     <section className="section-space" id="services">
       <div className="app-container">
         <SectionHeading
           align="center"
           className="max-w-5xl"
-          eyebrow="خدماتنا الهندسية"
-          title="نظام خدمات مصمم ليقود المشروع بدقة من أول قرار إلى آخر تفصيلة"
+          description={section.description}
+          eyebrow={section.eyebrow}
+          title={section.title}
           titleClassName="text-3xl leading-[1.42] md:text-4xl md:leading-[1.38]"
         />
 
         <div className="mt-12 grid gap-4 lg:grid-cols-4">
-          {services.map((service, index) => (
+          {section.items.map((service, index) => (
             <Reveal
               className={cn(
                 "panel flex h-full flex-col justify-between px-6 py-7 md:px-8 md:py-9",

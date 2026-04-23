@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { ArrowUpLeft, Clock3, Mail, MapPin, Phone } from "lucide-react";
 
-import { navigation, services, siteConfig } from "@/data/site";
+import type {
+  ContactSectionData,
+  FooterSectionData,
+  GeneralSettingsData,
+} from "@/lib/content/types";
 import { SiteBrand } from "@/components/layout/site-brand";
 
 type SocialIconProps = {
@@ -56,31 +60,47 @@ function SocialIcon({ platform, className = "size-4" }: SocialIconProps) {
   );
 }
 
-export function SiteFooter() {
+type SiteFooterProps = {
+  navigation: ReadonlyArray<{ label: string; href: string }>;
+  generalSettings: GeneralSettingsData;
+  contact: ContactSectionData;
+  footer: FooterSectionData;
+};
+
+export function SiteFooter({
+  navigation,
+  generalSettings,
+  contact,
+  footer,
+}: SiteFooterProps) {
   return (
     <footer className="border-t border-line/70 pb-10 pt-14 text-center md:text-start">
       <div className="app-container">
         <div className="grid gap-10 lg:grid-cols-[1.1fr_0.7fr_0.7fr_0.9fr]">
           <div className="space-y-5">
             <div className="space-y-2">
-              <Link aria-label={siteConfig.name} className="inline-flex items-center" href="/">
-                <SiteBrand className="h-auto w-[6rem] md:w-[7rem]" />
+              <Link aria-label={generalSettings.name} className="inline-flex items-center" href="/">
+                <SiteBrand
+                  className="h-auto w-[6rem] md:w-[7rem]"
+                  logoPath={footer.iconPath || generalSettings.logoPath}
+                  siteName={generalSettings.name}
+                />
               </Link>
               <p className="mx-auto max-w-md text-sm leading-7 text-text-muted md:mx-0">
-                نحن نبني بأسلوب يتجاوز مجرد التشييد؛ نصمم وننفذ مساحات تعكس قيمة العميل وتخدم أهدافه التشغيلية والجمالية.
+                {footer.description}
               </p>
             </div>
             <Link
               className="inline-flex items-center gap-2 text-sm font-semibold text-primary transition-transform duration-300 hover:-translate-y-0.5"
               href="/projects"
             >
-              استعراض المشاريع
+              {footer.projectsLinkLabel}
               <ArrowUpLeft className="size-4" />
             </Link>
           </div>
 
           <div>
-            <h3 className="mb-4 font-display text-lg font-bold text-text">روابط سريعة</h3>
+            <h3 className="mb-4 font-display text-lg font-bold text-text">{footer.quickLinksTitle}</h3>
             <ul className="space-y-3 text-sm text-text-muted">
               {navigation.map((item) => (
                 <li key={item.href}>
@@ -93,39 +113,39 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h3 className="mb-4 font-display text-lg font-bold text-text">الخدمات</h3>
+            <h3 className="mb-4 font-display text-lg font-bold text-text">{footer.servicesTitle}</h3>
             <ul className="space-y-3 text-sm text-text-muted">
-              {services.slice(0, 4).map((service) => (
-                <li key={service.title}>{service.title}</li>
+              {footer.services.map((service) => (
+                <li key={service}>{service}</li>
               ))}
             </ul>
           </div>
 
           <div>
-            <h3 className="mb-4 font-display text-lg font-bold text-text">اتصل بنا</h3>
+            <h3 className="mb-4 font-display text-lg font-bold text-text">{footer.contactTitle}</h3>
             <ul className="space-y-4 text-sm text-text-muted">
               <li className="flex items-start justify-center gap-3 md:justify-start">
                 <MapPin className="mt-1 size-4 text-primary" />
-                <span>{siteConfig.address}</span>
+                <span>{contact.address}</span>
               </li>
               <li className="flex items-center justify-center gap-3 md:justify-start">
                 <Phone className="size-4 text-primary" />
-                <a href={`tel:${siteConfig.phone}`}>{siteConfig.phone}</a>
+                <a href={`tel:${contact.phone}`}>{contact.phone}</a>
               </li>
               <li className="flex items-center justify-center gap-3 md:justify-start">
                 <Mail className="size-4 text-primary" />
-                <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+                <a href={`mailto:${contact.email}`}>{contact.email}</a>
               </li>
               <li className="flex items-center justify-center gap-3 md:justify-start">
                 <Clock3 className="size-4 text-primary" />
                 <span>
-                  {siteConfig.workingDays} | {siteConfig.workingHours}
+                  {contact.workingDays} | {contact.workingHours}
                 </span>
               </li>
             </ul>
 
             <div className="mt-6 flex items-center justify-center gap-2 md:justify-start">
-              {siteConfig.socialLinks.map((item) => (
+              {generalSettings.socialLinks.map((item) => (
                 <Link
                   aria-label={item.label}
                   className="inline-flex size-10 items-center justify-center rounded-full border border-line bg-white/5 text-text-muted transition-colors duration-300 hover:border-primary/60 hover:bg-primary/12 hover:text-primary"
@@ -143,7 +163,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-10 border-t border-line/70 pt-6 text-center text-sm text-text-muted">
-          <p>© ٢٠٢٦ رونق للمقاولات. جميع الحقوق محفوظة.</p>
+          <p>{footer.copyrightText}</p>
         </div>
       </div>
     </footer>

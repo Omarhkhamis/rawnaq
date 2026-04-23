@@ -1,18 +1,22 @@
+import type { FaqSectionData } from "@/lib/content/types";
 import { FaqList } from "@/components/projects/faq-list";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { faqs } from "@/data/site";
 
-export function HomeFaqSection() {
+type HomeFaqSectionProps = {
+  section: FaqSectionData;
+};
+
+export function HomeFaqSection({ section }: HomeFaqSectionProps) {
   return (
     <section className="section-space">
       <div className="app-container">
         <SectionHeading
           align="center"
-          eyebrow="أسئلة شائعة"
-          title="إجابات مختصرة تساعد العميل على فهم المسار قبل بدء المشروع"
+          eyebrow={section.eyebrow}
+          title={section.title}
         />
         <div className="mx-auto mt-12 max-w-4xl">
-          <FaqList items={faqs} />
+          <FaqList items={section.items} />
         </div>
       </div>
     </section>

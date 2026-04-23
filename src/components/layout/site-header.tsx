@@ -5,12 +5,23 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 
-import { navigation, siteConfig } from "@/data/site";
 import { cn } from "@/lib/utils";
 import { SiteBrand } from "@/components/layout/site-brand";
 import { Button } from "@/components/ui/button";
 
-export function SiteHeader() {
+type SiteHeaderProps = {
+  navigation: ReadonlyArray<{ label: string; href: string }>;
+  siteName: string;
+  logoPath: string;
+  quoteButtonLabel: string;
+};
+
+export function SiteHeader({
+  navigation,
+  siteName,
+  logoPath,
+  quoteButtonLabel,
+}: SiteHeaderProps) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -30,8 +41,13 @@ export function SiteHeader() {
     <header className="fixed inset-x-0 top-4 z-50">
       <div className="app-container">
         <div className="panel flex items-center justify-between px-4 py-3 md:px-6">
-          <Link aria-label={siteConfig.name} className="flex shrink-0 items-center" href="/">
-            <SiteBrand className="h-auto w-[4.5rem] md:w-[5rem]" priority />
+          <Link aria-label={siteName} className="flex shrink-0 items-center" href="/">
+            <SiteBrand
+              className="h-auto w-[4.5rem] md:w-[5rem]"
+              logoPath={logoPath}
+              priority
+              siteName={siteName}
+            />
           </Link>
 
           <nav className="hidden items-center gap-8 lg:flex">
@@ -51,7 +67,7 @@ export function SiteHeader() {
 
           <div className="hidden lg:block">
             <Button href="/#contact" size="md">
-              اطلب عرض سعر
+              {quoteButtonLabel}
             </Button>
           </div>
 
@@ -86,7 +102,7 @@ export function SiteHeader() {
               ))}
             </nav>
             <Button className="mt-4 w-full" href="/#contact" onClick={() => setIsOpen(false)}>
-              اطلب عرض سعر
+              {quoteButtonLabel}
             </Button>
           </div>
         ) : null}

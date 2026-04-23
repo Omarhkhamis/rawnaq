@@ -2,25 +2,33 @@ import type { Metadata } from "next";
 import Image from "next/image";
 
 import { ContactCtaSection } from "@/components/sections/contact-cta-section";
+import { FaqList } from "@/components/projects/faq-list";
+import { ProjectsExplorer } from "@/components/projects/projects-explorer";
 import { AnimatedCounter } from "@/components/ui/counter";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { FaqList } from "@/components/projects/faq-list";
-import { ProjectsExplorer } from "@/components/projects/projects-explorer";
-import { faqs, projects } from "@/data/site";
+import { getPublicSiteContent } from "@/lib/content/repository";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "مشاريعنا",
   description: "استكشف مجموعة مختارة من مشاريع رونق السكنية والتجارية بتجربة عرض احترافية وحديثة.",
 };
 
-const projectMetrics = [
-  { value: 2, label: "قطاعات رئيسية", suffix: "" },
-  { value: 4, label: "دراسات حالة معروضة", suffix: "" },
-  { value: 100, label: "تركيز على الجودة", suffix: "%" },
-];
+export default async function ProjectsPage() {
+  const content = await getPublicSiteContent();
+  const projects = content.projects;
+  const uniqueCategories = new Set(projects.map((project) => project.category)).size;
+  const projectMetrics = [
+    { value: uniqueCategories, label: "قطاعات رئيسية", suffix: "" },
+    { value: projects.length, label: "دراسات حالة معروضة", suffix: "" },
+    { value: 100, label: "تركيز على الجودة", suffix: "%" },
+  ];
+  const backgroundImage =
+    projects[0]?.cardImage ??
+    "https://lh3.googleusercontent.com/aida-public/AB6AXuCk_qoPCt4mgeQT6uXvb9pBf6_m15ttUnew-1lZ_LtYgM9xRDPPzQRqnssqqjMyOcFQgnuQl53otb1rfaEoPsGe9ESUoCb2f6pVxIa1zQL_maxSCOyXMBvHGMLfuCFDEPrU067b7ApTJaYU1J9BsG_YfsXbtA-JwCfVcouvPMCnQdShqzmIuPuYXQRN0ujaHQRc7ZdYUCFBULR3eD0VDakwwvo2kX9sF14VdIrunbeYPO2CBqoT3Iwn_rtz8vADB88uDUmvyZluQas";
 
-export default function ProjectsPage() {
   return (
     <>
       <section className="relative overflow-hidden pt-36">
@@ -31,7 +39,7 @@ export default function ProjectsPage() {
             fill
             priority
             sizes="100vw"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCk_qoPCt4mgeQT6uXvb9pBf6_m15ttUnew-1lZ_LtYgM9xRDPPzQRqnssqqjMyOcFQgnuQl53otb1rfaEoPsGe9ESUoCb2f6pVxIa1zQL_maxSCOyXMBvHGMLfuCFDEPrU067b7ApTJaYU1J9BsG_YfsXbtA-JwCfVcouvPMCnQdShqzmIuPuYXQRN0ujaHQRc7ZdYUCFBULR3eD0VDakwwvo2kX9sF14VdIrunbeYPO2CBqoT3Iwn_rtz8vADB88uDUmvyZluQas"
+            src={backgroundImage}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-background/55 to-background" />
         </div>
@@ -56,9 +64,9 @@ export default function ProjectsPage() {
       <section className="section-space pt-8">
         <div className="app-container">
           <SectionHeading
+            description="تم تحويل صفحة المشاريع إلى تجربة أكثر تفاعلية مع فلاتر سريعة، بطاقات قوية بصرياً، ومسار مباشر للوصول إلى صفحات المشاريع التفصيلية."
             eyebrow="معرض الأعمال"
             title="استكشف مجموعة مختارة من إبداعاتنا في مختلف القطاعات"
-            description="تم تحويل صفحة المشاريع إلى تجربة أكثر تفاعلية مع فلاتر سريعة، بطاقات قوية بصرياً، ومسار مباشر للوصول إلى صفحات المشاريع التفصيلية."
           />
           <div className="mt-10">
             <ProjectsExplorer projects={projects} />
@@ -85,16 +93,17 @@ export default function ProjectsPage() {
         <div className="app-container">
           <SectionHeading
             align="center"
-            eyebrow="أسئلة شائعة"
-            title="إجابات واضحة تسرّع اتخاذ القرار قبل البدء"
+            eyebrow={content.sections.faq.eyebrow}
+            title={content.sections.faq.title}
           />
           <div className="mx-auto mt-12 max-w-4xl">
-            <FaqList items={faqs} />
+            <FaqList items={content.sections.faq.items} />
           </div>
         </div>
       </section>
 
-      <ContactCtaSection />
+      <ContactCtaSection section={content.sections.contact} />
     </>
   );
 }
+

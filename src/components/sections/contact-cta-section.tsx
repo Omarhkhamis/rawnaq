@@ -1,29 +1,33 @@
 import { Clock3, Mail, MapPin, Phone } from "lucide-react";
 
-import { siteConfig } from "@/data/site";
+import type { ContactSectionData } from "@/lib/content/types";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 
-export function ContactCtaSection() {
+type ContactCtaSectionProps = {
+  section: ContactSectionData;
+};
+
+export function ContactCtaSection({ section }: ContactCtaSectionProps) {
   return (
     <section className="section-space" id="contact">
       <div className="app-container">
         <div className="architect-frame panel grid gap-8 px-6 py-8 md:px-10 md:py-10 lg:grid-cols-[1fr_0.9fr] lg:items-end">
           <div className="space-y-6">
             <SectionHeading
-              eyebrow="تواصل معنا"
-              title="نبني أحلامكم بدقة هندسية وروح إبداعية"
-              description="نحن هنا للإجابة على استفساراتكم ومناقشة مشروعكم القادم. فريقنا جاهز لتقديم الاستشارات الفنية المتخصصة خلال 24 ساعة عمل."
+              description={section.description}
+              eyebrow={section.eyebrow}
+              title={section.title}
             />
 
             <Reveal delay={0.12}>
               <div className="flex flex-col gap-4 sm:flex-row">
-                <Button href={`tel:${siteConfig.phone}`} size="lg">
-                  اتصل الآن
+                <Button href={`tel:${section.phone}`} size="lg">
+                  {section.primaryButtonLabel}
                 </Button>
-                <Button href={`mailto:${siteConfig.email}`} size="lg" variant="outline">
-                  راسلنا بالبريد
+                <Button href={`mailto:${section.email}`} size="lg" variant="outline">
+                  {section.secondaryButtonLabel}
                 </Button>
               </div>
             </Reveal>
@@ -33,34 +37,34 @@ export function ContactCtaSection() {
             <Reveal className="panel px-5 py-5" delay={0.06}>
               <div className="flex items-center gap-3 text-primary">
                 <Phone className="size-4" />
-                <span className="text-sm font-semibold">الهاتف</span>
+                <span className="text-sm font-semibold">{section.phoneLabel}</span>
               </div>
-              <p className="mt-4 text-lg font-bold text-text">{siteConfig.phone}</p>
+              <p className="mt-4 text-lg font-bold text-text">{section.phone}</p>
             </Reveal>
 
             <Reveal className="panel px-5 py-5" delay={0.12}>
               <div className="flex items-center gap-3 text-primary">
                 <Mail className="size-4" />
-                <span className="text-sm font-semibold">البريد</span>
+                <span className="text-sm font-semibold">{section.emailLabel}</span>
               </div>
-              <p className="mt-4 text-lg font-bold text-text">{siteConfig.email}</p>
+              <p className="mt-4 text-lg font-bold text-text">{section.email}</p>
             </Reveal>
 
             <Reveal className="panel px-5 py-5" delay={0.18}>
               <div className="flex items-center gap-3 text-primary">
                 <MapPin className="size-4" />
-                <span className="text-sm font-semibold">العنوان</span>
+                <span className="text-sm font-semibold">{section.addressLabel}</span>
               </div>
-              <p className="mt-4 text-lg font-bold leading-8 text-text">{siteConfig.address}</p>
+              <p className="mt-4 text-lg font-bold leading-8 text-text">{section.address}</p>
             </Reveal>
 
             <Reveal className="panel px-5 py-5" delay={0.24}>
               <div className="flex items-center gap-3 text-primary">
                 <Clock3 className="size-4" />
-                <span className="text-sm font-semibold">أوقات العمل</span>
+                <span className="text-sm font-semibold">{section.workingHoursLabel}</span>
               </div>
-              <p className="mt-4 text-lg font-bold text-text">{siteConfig.workingDays}</p>
-              <p className="mt-1 text-text-muted">{siteConfig.workingHours}</p>
+              <p className="mt-4 text-lg font-bold text-text">{section.workingDays}</p>
+              <p className="mt-1 text-text-muted">{section.workingHours}</p>
             </Reveal>
           </div>
         </div>
