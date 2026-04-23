@@ -23,7 +23,7 @@ export function SectionHeading({
     <div
       className={cn(
         "space-y-4",
-        align === "center" && "mx-auto max-w-3xl text-center",
+        align === "center" ? "mx-auto max-w-3xl text-center" : "text-center md:text-start",
         className,
       )}
     >
@@ -34,7 +34,7 @@ export function SectionHeading({
       ) : null}
       <h2
         className={cn(
-          "text-balance font-display text-4xl font-bold tracking-tight text-text md:text-6xl",
+          "text-balance font-display text-3xl font-bold leading-[1.42] tracking-normal text-text md:text-5xl md:leading-[1.32]",
           titleClassName,
         )}
       >
@@ -43,8 +43,8 @@ export function SectionHeading({
       {description ? (
         <p
           className={cn(
-            "text-balance max-w-2xl text-base leading-8 text-text-muted md:text-lg",
-            align === "center" && "mx-auto",
+            "text-balance mx-auto max-w-2xl text-base leading-8 text-text-muted md:text-lg",
+            align !== "center" && "md:mx-0",
             descriptionClassName,
           )}
         >

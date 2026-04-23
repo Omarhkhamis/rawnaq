@@ -27,7 +27,7 @@ export function FaqList({ items }: FaqListProps) {
                 onClick={() => setOpenIndex(isOpen ? null : index)}
                 type="button"
               >
-                <span className="font-display text-lg font-bold text-text md:text-xl">
+                <span className="flex-1 text-center font-display text-lg font-bold text-text md:text-start md:text-xl">
                   {item.question}
                 </span>
                 <span

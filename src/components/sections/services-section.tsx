@@ -21,7 +21,7 @@ export function ServicesSection() {
           className="max-w-5xl"
           eyebrow="خدماتنا الهندسية"
           title="نظام خدمات مصمم ليقود المشروع بدقة من أول قرار إلى آخر تفصيلة"
-          titleClassName="text-3xl leading-[1.26] md:text-5xl md:leading-[1.3]"
+          titleClassName="text-3xl leading-[1.42] md:text-4xl md:leading-[1.38]"
         />
 
         <div className="mt-12 grid gap-4 lg:grid-cols-4">
@@ -57,7 +57,7 @@ export function ServicesSection() {
               ) : null}
 
               <div className={cn(service.image ? "mt-0" : "mt-10")}>
-                <h3 className="font-display text-2xl font-bold text-text md:text-3xl">
+                <h3 className="text-center font-display text-xl font-bold leading-[1.45] text-text md:text-start md:text-2xl md:leading-[1.4]">
                   {service.title}
                 </h3>
                 <p className="mt-4 leading-8 text-text-muted">{service.description}</p>

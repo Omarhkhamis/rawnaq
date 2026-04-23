@@ -15,7 +15,7 @@ export function ProcessSection() {
             />
             <Reveal delay={0.1}>
               <div className="panel px-6 py-6">
-                <p className="font-display text-2xl font-bold text-text">تنسيق واحد لكل التخصصات</p>
+                <p className="text-center font-display text-xl font-bold leading-[1.45] text-text md:text-start md:text-2xl">تنسيق واحد لكل التخصصات</p>
                 <p className="mt-3 leading-8 text-text-muted">
                   الهدف هو تقليل الفجوة بين ما يُعتمد على الورق وما يُنفذ في الموقع، مع ضبط الجودة والزمن والتكلفة ضمن مسار واحد.
                 </p>
@@ -34,7 +34,7 @@ export function ProcessSection() {
                     {item.step}
                   </div>
                   <div>
-                    <h3 className="font-display text-2xl font-bold text-text">{item.title}</h3>
+                    <h3 className="text-center font-display text-xl font-bold leading-[1.45] text-text md:text-start md:text-2xl">{item.title}</h3>
                     <p className="mt-3 max-w-2xl leading-8 text-text-muted">{item.description}</p>
                   </div>
                 </div>

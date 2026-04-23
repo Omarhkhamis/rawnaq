@@ -6,7 +6,7 @@ export default function NotFound() {
       <div className="app-container">
         <div className="architect-frame panel mx-auto max-w-3xl px-8 py-12 text-center">
           <p className="font-accent text-sm uppercase tracking-[0.35em] text-primary">404</p>
-          <h1 className="mt-4 font-display text-4xl font-bold text-text md:text-6xl">
+          <h1 className="mt-4 font-display text-3xl font-bold leading-[1.4] text-text md:text-5xl md:leading-[1.28]">
             الصفحة المطلوبة غير موجودة
           </h1>
           <p className="mx-auto mt-4 max-w-2xl leading-8 text-text-muted">

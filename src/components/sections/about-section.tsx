@@ -60,13 +60,13 @@ export function AboutSection() {
             <Reveal delay={0.08}>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="panel px-5 py-6">
-                  <p className="font-display text-xl font-bold text-text">رؤية تنفيذية دقيقة</p>
+                  <p className="text-center font-display text-lg font-bold leading-[1.5] text-text md:text-start md:text-xl">رؤية تنفيذية دقيقة</p>
                   <p className="mt-2 text-sm leading-7 text-text-muted">
                     نقرأ المشروع كمنظومة واحدة: تكلفة، جودة، تجربة مستخدم، وهوية بصرية.
                   </p>
                 </div>
                 <div className="panel px-5 py-6">
-                  <p className="font-display text-xl font-bold text-text">حضور ميداني مستمر</p>
+                  <p className="text-center font-display text-lg font-bold leading-[1.5] text-text md:text-start md:text-xl">حضور ميداني مستمر</p>
                   <p className="mt-2 text-sm leading-7 text-text-muted">
                     فرق إشراف ومتابعة يومية تمنع التراكمات وتسرّع اتخاذ القرار أثناء التنفيذ.
                   </p>

@@ -42,7 +42,7 @@ export default function ProjectsPage() {
               <span className="font-accent text-sm uppercase tracking-[0.45em] text-primary">
                 Architectural Excellence
               </span>
-              <h1 className="font-display text-5xl font-bold tracking-tight text-text md:text-7xl">
+              <h1 className="text-center font-display text-4xl font-bold leading-[1.35] tracking-normal text-text md:text-start md:text-6xl md:leading-[1.25]">
                 مشاريعنا
               </h1>
               <p className="max-w-2xl text-lg leading-8 text-text-muted">
@@ -74,7 +74,7 @@ export default function ProjectsPage() {
                 <div className="text-5xl font-bold text-primary">
                   <AnimatedCounter suffix={metric.suffix} value={metric.value} />
                 </div>
-                <p className="mt-3 font-display text-2xl font-bold text-text">{metric.label}</p>
+                <p className="mt-3 text-center font-display text-xl font-bold leading-[1.45] text-text md:text-start md:text-2xl">{metric.label}</p>
               </Reveal>
             ))}
           </div>

@@ -97,11 +97,17 @@ export const siteConfig = {
   faviconPath: "/brand/rawnaq-favicon.png",
   description:
     "شركة مقاولات تقدم حلولاً متكاملة في التصميم والتنفيذ وإدارة المشاريع بهوية عصرية ومعايير تنفيذ عالية.",
-  phone: "+966 500 000 000",
+  phone: "0533611830",
   email: "info@ronaq.sa",
   address: "الرياض، حي الملقا، طريق الملك فهد",
   workingDays: "الأحد - الخميس",
   workingHours: "08:00 صباحاً - 05:00 مساءً",
+  socialLinks: [
+    { label: "واتساب", href: "https://wa.me/966533611830", platform: "whatsapp" },
+    { label: "إنستغرام", href: "https://instagram.com/ronaqco", platform: "instagram" },
+    { label: "سناب شات", href: "https://www.snapchat.com/add/ronaqco", platform: "snapchat" },
+    { label: "تيك توك", href: "https://www.tiktok.com/@ronaqco", platform: "tiktok" },
+  ],
 };
 
 export const navigation = [

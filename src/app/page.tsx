@@ -6,6 +6,7 @@ import { HomeHero } from "@/components/sections/home-hero";
 import { ProcessSection } from "@/components/sections/process-section";
 import { ServicesSection } from "@/components/sections/services-section";
 import { ValuesSection } from "@/components/sections/values-section";
+import { WhyRawnaqSection } from "@/components/sections/why-rawnaq-section";
 
 export default function HomePage() {
   return (
@@ -14,6 +15,7 @@ export default function HomePage() {
       <AboutSection />
       <ServicesSection />
       <ProcessSection />
+      <WhyRawnaqSection />
       <ValuesSection />
       <FeaturedProjectsSection />
       <HomeFaqSection />

@@ -78,9 +78,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 {project.heroLabel}
               </span>
 
-              <h1 className="text-balance font-display text-5xl font-bold tracking-tight text-text md:text-7xl">
+              <h1 className="text-balance text-center font-display text-4xl font-bold leading-[1.35] tracking-normal text-text md:text-start md:text-6xl md:leading-[1.25]">
                 {project.title}
-                <span className="mt-3 block text-3xl text-text-muted md:text-4xl">{project.subtitle}</span>
+                <span className="mt-3 block text-2xl leading-[1.45] text-text-muted md:text-3xl">{project.subtitle}</span>
               </h1>
 
               <p className="max-w-3xl text-lg leading-8 text-text-muted">{project.excerpt}</p>
@@ -122,11 +122,11 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               <Reveal>
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="panel px-6 py-6">
-                    <p className="font-display text-2xl font-bold text-text">التحدي</p>
+                    <p className="text-center font-display text-xl font-bold leading-[1.45] text-text md:text-start md:text-2xl">التحدي</p>
                     <p className="mt-3 leading-8 text-text-muted">{project.challenge}</p>
                   </div>
                   <div className="panel px-6 py-6">
-                    <p className="font-display text-2xl font-bold text-text">الحل</p>
+                    <p className="text-center font-display text-xl font-bold leading-[1.45] text-text md:text-start md:text-2xl">الحل</p>
                     <p className="mt-3 leading-8 text-text-muted">{project.solution}</p>
                   </div>
                 </div>
@@ -135,7 +135,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
             <Reveal>
               <aside className="panel h-fit px-6 py-6 lg:sticky lg:top-28">
-                <h2 className="font-display text-2xl font-bold text-text">تفاصيل المشروع</h2>
+                <h2 className="text-center font-display text-xl font-bold leading-[1.45] text-text md:text-start md:text-2xl">تفاصيل المشروع</h2>
                 <div className="mt-6 space-y-4 border-b border-line/70 pb-6 text-sm">
                   <div className="flex items-center justify-between gap-4">
                     <span className="text-text-muted">المساحة</span>
@@ -156,7 +156,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 </div>
 
                 <div className="mt-6">
-                  <h3 className="font-display text-xl font-bold text-text">نطاق العمل</h3>
+                  <h3 className="text-center font-display text-lg font-bold leading-[1.5] text-text md:text-start md:text-xl">نطاق العمل</h3>
                   <div className="mt-4 space-y-3">
                     {project.deliverables.map((item) => (
                       <div className="flex items-start gap-3" key={item}>
@@ -186,7 +186,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 <span className="inline-flex size-14 items-center justify-center rounded-2xl bg-primary/12 text-primary">
                   <FeatureIcon className="size-7" name={material.icon} />
                 </span>
-                <h3 className="mt-8 font-display text-2xl font-bold text-text">{material.title}</h3>
+                <h3 className="mt-8 text-center font-display text-xl font-bold leading-[1.45] text-text md:text-start md:text-2xl">{material.title}</h3>
                 <p className="mt-4 leading-8 text-text-muted">{material.description}</p>
               </Reveal>
             ))}
@@ -244,7 +244,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                         value={result.value}
                       />
                     </div>
-                    <p className="mt-3 font-display text-2xl font-bold text-text">{result.label}</p>
+                    <p className="mt-3 text-center font-display text-xl font-bold leading-[1.45] text-text md:text-start md:text-2xl">{result.label}</p>
                   </Reveal>
                 ))}
               </div>
@@ -256,7 +256,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                   <span className="inline-flex size-16 items-center justify-center rounded-full bg-primary/12 text-primary">
                     <FeatureIcon className="size-8" name="badge" />
                   </span>
-                  <h3 className="mt-6 font-display text-3xl font-bold text-text">{project.awardTitle}</h3>
+                  <h3 className="mt-6 text-center font-display text-2xl font-bold leading-[1.4] text-text md:text-3xl">{project.awardTitle}</h3>
                   <p className="mt-4 leading-8 text-text-muted">{project.awardDescription}</p>
                 </div>
               </div>

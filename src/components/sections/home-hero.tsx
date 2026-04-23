@@ -29,7 +29,7 @@ export function HomeHero() {
           <div className="space-y-8">
             <div className="space-y-6">
               <Reveal>
-                <h1 className="text-balance font-display text-5xl font-bold leading-[1.15] tracking-tight text-text md:text-7xl xl:text-[5.4rem]">
+                <h1 className="text-balance text-center font-display text-4xl font-bold leading-[1.35] tracking-normal text-text md:text-start md:text-6xl md:leading-[1.25] xl:text-[4.8rem]">
                   رونق.. تجسيد للذوق الرفيع في كل ما حولك
                 </h1>
               </Reveal>
@@ -73,7 +73,7 @@ export function HomeHero() {
                     <div className="mb-2 text-4xl font-bold text-primary md:text-5xl">
                       <AnimatedCounter suffix={stat.suffix} value={stat.value} />
                     </div>
-                    <p className="font-display text-lg font-bold text-text">{stat.label}</p>
+                    <p className="text-center font-display text-base font-bold leading-[1.55] text-text md:text-start md:text-lg">{stat.label}</p>
                     <p className="mt-2 text-sm leading-7 text-text-muted">{stat.description}</p>
                   </div>
                 </Reveal>
@@ -103,7 +103,7 @@ export function HomeHero() {
                   <BadgeCheck className="size-4" />
                   <span className="text-sm font-semibold">مشروع مميز</span>
                 </div>
-                <p className="font-display text-2xl font-bold text-text">{homeProjectHero.title}</p>
+                <p className="text-center font-display text-xl font-bold leading-[1.45] text-text md:text-start md:text-2xl">{homeProjectHero.title}</p>
                 <div className="mt-3 flex items-center gap-2 text-sm text-text-muted">
                   <MapPin className="size-4 text-primary" />
                   <span>{homeProjectHero.location}</span>
@@ -113,7 +113,7 @@ export function HomeHero() {
 
             <div className="animate-float absolute -left-2 top-10 hidden rounded-[1.5rem] border border-white/10 bg-black/30 px-5 py-4 shadow-2xl backdrop-blur-xl md:block">
               <p className="text-sm text-text-muted">من الفكرة إلى التسليم</p>
-              <p className="mt-2 font-display text-2xl font-bold text-text">حل متكامل تحت سقف واحد</p>
+              <p className="mt-2 text-center font-display text-xl font-bold leading-[1.45] text-text md:text-start md:text-2xl">حل متكامل تحت سقف واحد</p>
             </div>
           </Reveal>
         </div>

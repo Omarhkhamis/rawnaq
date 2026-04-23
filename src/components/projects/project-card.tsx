@@ -51,8 +51,8 @@ export function ProjectCard({
 
           <h3
             className={cn(
-              "text-balance font-display font-bold tracking-tight text-text",
-              compact ? "text-2xl md:text-3xl" : "text-3xl md:text-4xl",
+              "text-balance text-center font-display font-bold leading-[1.45] tracking-normal text-text md:text-start md:leading-[1.4]",
+              compact ? "text-xl md:text-2xl" : "text-2xl md:text-3xl",
             )}
           >
             {project.title}
