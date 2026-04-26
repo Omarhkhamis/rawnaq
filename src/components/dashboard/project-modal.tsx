@@ -4,8 +4,13 @@ import { useMemo, useState, useTransition } from "react";
 import { Plus, Trash2, X } from "lucide-react";
 
 import type { IconKey } from "@/data/site";
+import {
+  FeatureIconSelectOption,
+  FeatureIconSelectValue,
+} from "@/components/dashboard/feature-icon-select-content";
 import type { DashboardProject, FeatureIconKey, MediaAsset } from "@/lib/content/types";
 import { MediaPickerField } from "@/components/dashboard/media-picker-field";
+import { SelectField as Select } from "@/components/dashboard/select-field";
 
 type ProjectModalProps = {
   initialProject: DashboardProject | null;
@@ -54,6 +59,26 @@ const contentIconOptions = iconOptions.filter(
     option.value !== "file",
 );
 
+function renderIconOption(value: string, selected = false) {
+  const option = iconOptions.find((item) => item.value === value) ?? contentIconOptions.find((item) => item.value === value);
+
+  if (!option) {
+    return null;
+  }
+
+  return <FeatureIconSelectOption label={option.label} name={option.value} selected={selected} />;
+}
+
+function renderSelectedIconOption(value: string) {
+  const option = iconOptions.find((item) => item.value === value) ?? contentIconOptions.find((item) => item.value === value);
+
+  if (!option) {
+    return <span className="text-text-muted">{value}</span>;
+  }
+
+  return <FeatureIconSelectValue label={option.label} name={option.value} />;
+}
+
 function createEmptyProject(): ProjectDraft {
   return {
     id: "",
@@ -89,16 +114,13 @@ function createEmptyProject(): ProjectDraft {
 function Field({
   label,
   children,
-  description,
 }: {
   label: string;
   children: React.ReactNode;
-  description?: string;
 }) {
   return (
     <label className="block space-y-2">
       <span className="text-sm font-semibold text-text">{label}</span>
-      {description ? <p className="text-xs leading-6 text-text-muted">{description}</p> : null}
       {children}
     </label>
   );
@@ -122,17 +144,6 @@ function Textarea(
     <textarea
       {...props}
       className={`min-h-32 w-full rounded-2xl border border-line bg-black/20 px-4 py-3 text-sm text-text outline-none transition focus:border-primary/60 ${props.className ?? ""}`}
-    />
-  );
-}
-
-function Select(
-  props: React.SelectHTMLAttributes<HTMLSelectElement>,
-) {
-  return (
-    <select
-      {...props}
-      className={`w-full rounded-2xl border border-line bg-black/20 px-4 py-3 text-sm text-text outline-none transition focus:border-primary/60 ${props.className ?? ""}`}
     />
   );
 }
@@ -162,12 +173,11 @@ export function ProjectModal({
   );
 
   return (
-    <div className="fixed inset-0 z-[140] flex items-start justify-center overflow-y-auto bg-black/75 px-4 py-8">
-      <div className="panel w-full max-w-6xl px-5 py-5 md:px-6">
-        <div className="flex items-center justify-between gap-4 border-b border-line/70 pb-4">
+    <div className="fixed inset-0 z-[140] flex items-start justify-center bg-black/75 px-4 py-6">
+      <div className="panel flex max-h-[calc(100vh-3rem)] w-full max-w-6xl flex-col overflow-hidden px-5 py-5 md:px-6">
+        <div className="flex shrink-0 items-center justify-between gap-4 border-b border-line/70 pb-4">
           <div>
             <h3 className="font-display text-2xl font-bold text-text">{title}</h3>
-            <p className="mt-1 text-sm text-text-muted">كل تفاصيل المشروع تُدار من هذا المودال، بما في ذلك الصور والمحتوى والعرض في الرئيسية.</p>
           </div>
           <button
             className="inline-flex size-11 items-center justify-center rounded-full border border-line bg-white/5 text-text-muted transition hover:text-text"
@@ -178,7 +188,7 @@ export function ProjectModal({
           </button>
         </div>
 
-        <div className="mt-5 space-y-6">
+        <div className="mt-5 flex-1 space-y-6 overflow-y-auto pr-1">
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             <Field label="عنوان المشروع">
               <Input
@@ -336,7 +346,6 @@ export function ProjectModal({
             <div className="mb-4 flex items-center justify-between gap-4">
               <div>
                 <h4 className="font-display text-xl font-bold text-text">العرض في الرئيسية</h4>
-                <p className="text-sm text-text-muted">يمكنك تفعيل المشروع في الرئيسية وتحديد ترتيبه بين 4 خانات.</p>
               </div>
             </div>
             <div className="grid gap-4 md:grid-cols-[auto_1fr] md:items-center">
@@ -377,7 +386,6 @@ export function ProjectModal({
             <div className="mb-4 flex items-center justify-between">
               <div>
                 <h4 className="font-display text-xl font-bold text-text">نطاق العمل</h4>
-                <p className="text-sm text-text-muted">أضف عناصر التنفيذ التي ستظهر داخل صفحة المشروع.</p>
               </div>
               <button
                 className="inline-flex min-h-11 items-center gap-2 rounded-2xl border border-line bg-white/5 px-4 text-sm font-semibold text-text transition hover:text-primary"
@@ -432,7 +440,6 @@ export function ProjectModal({
             <div className="mb-4 flex items-center justify-between">
               <div>
                 <h4 className="font-display text-xl font-bold text-text">معرض الصور</h4>
-                <p className="text-sm text-text-muted">أضف صور المشروع التي تظهر داخل صفحة التفاصيل.</p>
               </div>
               <button
                 className="inline-flex min-h-11 items-center gap-2 rounded-2xl border border-line bg-white/5 px-4 text-sm font-semibold text-text transition hover:text-primary"
@@ -506,7 +513,6 @@ export function ProjectModal({
             <div className="mb-4 flex items-center justify-between">
               <div>
                 <h4 className="font-display text-xl font-bold text-text">المواد والتشطيبات</h4>
-                <p className="text-sm text-text-muted">كل مادة تحتوي عنواناً ووصفاً وأيقونة.</p>
               </div>
               <button
                 className="inline-flex min-h-11 items-center gap-2 rounded-2xl border border-line bg-white/5 px-4 text-sm font-semibold text-text transition hover:text-primary"
@@ -554,6 +560,11 @@ export function ProjectModal({
                   </Field>
                   <Field label="الأيقونة">
                     <Select
+                      optionLayout="grid"
+                      renderOption={(option, selected) => renderIconOption(option.value, selected)}
+                      renderSelectedOption={(option) =>
+                        option ? renderSelectedIconOption(option.value) : null
+                      }
                       onChange={(event) =>
                         setDraft((current) => ({
                           ...current,
@@ -596,7 +607,6 @@ export function ProjectModal({
             <div className="mb-4 flex items-center justify-between">
               <div>
                 <h4 className="font-display text-xl font-bold text-text">نتائج المشروع</h4>
-                <p className="text-sm text-text-muted">القيمة رقمية، ويمكن إضافة Prefix أو Suffix مثل + أو %.</p>
               </div>
               <button
                 className="inline-flex min-h-11 items-center gap-2 rounded-2xl border border-line bg-white/5 px-4 text-sm font-semibold text-text transition hover:text-primary"

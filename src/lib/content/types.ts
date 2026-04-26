@@ -25,6 +25,7 @@ export type GeneralSettingsData = {
   logoPath: string;
   faviconPath: string;
   quoteButtonLabel: string;
+  whatsappUrl: string;
   socialLinks: SocialLink[];
 };
 
@@ -149,6 +150,14 @@ export type MediaAsset = {
   createdAt: string;
 };
 
+export type AdminAccount = {
+  id: string;
+  email: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type DashboardSections = {
   generalSettings: GeneralSettingsData;
   hero: HeroSectionData;
@@ -168,6 +177,7 @@ export type DashboardSnapshot = {
   sections: DashboardSections;
   projects: DashboardProject[];
   media: MediaAsset[];
+  admins: AdminAccount[];
 };
 
 export type PublicSiteContent = {
@@ -178,4 +188,3 @@ export type PublicSiteContent = {
   featuredProjects: DashboardProject[];
   heroProject: DashboardProject | null;
 };
-

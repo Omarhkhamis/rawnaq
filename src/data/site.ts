@@ -89,6 +89,21 @@ export type Project = {
   awardDescription: string;
 };
 
+export const socialPlatformOptions = [
+  { value: "whatsapp", label: "واتساب" },
+  { value: "instagram", label: "إنستغرام" },
+  { value: "snapchat", label: "سناب شات" },
+  { value: "tiktok", label: "تيك توك" },
+  { value: "facebook", label: "فيسبوك" },
+  { value: "linkedin", label: "لينكد إن" },
+] as const;
+
+export type SocialPlatform = (typeof socialPlatformOptions)[number]["value"];
+
+export function getSocialPlatformLabel(platform: string) {
+  return socialPlatformOptions.find((item) => item.value === platform)?.label ?? "";
+}
+
 export const siteConfig = {
   name: "رونق للمقاولات",
   shortName: "رونق",

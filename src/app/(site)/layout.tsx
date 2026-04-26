@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { WhatsappFloatingButton } from "@/components/layout/whatsapp-floating-button";
 import { getPublicSiteContent } from "@/lib/content/repository";
 
 export const dynamic = "force-dynamic";
@@ -54,7 +55,7 @@ export default async function SiteLayout({
         generalSettings={generalSettings}
         navigation={content.navigation}
       />
+      <WhatsappFloatingButton href={generalSettings.whatsappUrl} />
     </>
   );
 }
-

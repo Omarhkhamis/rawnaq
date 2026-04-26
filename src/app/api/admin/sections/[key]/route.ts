@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { getAdminSessionId } from "@/lib/admin-auth";
 import { dashboardSectionSchemas } from "@/lib/content/validation";
 import { saveSection } from "@/lib/content/repository";
 import type { DashboardSectionKey } from "@/lib/content/types";
@@ -8,6 +9,10 @@ export async function PUT(
   request: NextRequest,
   context: { params: Promise<{ key: string }> },
 ) {
+  if (!(await getAdminSessionId())) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
   const { key } = await context.params;
 
   if (!(key in dashboardSectionSchemas)) {
@@ -32,4 +37,3 @@ export async function PUT(
   const saved = await saveSection(sectionKey, parsed.data);
   return NextResponse.json(saved);
 }
-

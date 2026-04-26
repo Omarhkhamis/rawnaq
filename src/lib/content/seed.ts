@@ -33,6 +33,7 @@ export const seedSections: DashboardSections = {
     logoPath: defaultLogoPath,
     faviconPath: defaultFaviconPath,
     quoteButtonLabel: "اطلب عرض سعر",
+    whatsappUrl: "",
     socialLinks: siteConfig.socialLinks,
   },
   hero: {
@@ -198,4 +199,3 @@ export const initialMediaBlueprint: Array<
     altText: "أيقونة رونق",
   },
 ];
-

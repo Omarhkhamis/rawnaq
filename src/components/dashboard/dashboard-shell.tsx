@@ -3,21 +3,28 @@
 import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import Swal from "sweetalert2";
 import {
   Copy,
+  LogOut,
   Plus,
   Save,
   Trash2,
 } from "lucide-react";
 
 import { MediaPickerField } from "@/components/dashboard/media-picker-field";
+import {
+  FeatureIconSelectOption,
+  FeatureIconSelectValue,
+} from "@/components/dashboard/feature-icon-select-content";
 import { ProjectModal } from "@/components/dashboard/project-modal";
+import { SelectField as Select } from "@/components/dashboard/select-field";
 import {
   dashboardTabs,
-  getSectionKeyByTab,
   type DashboardTabKey,
 } from "@/lib/content/dashboard-tabs";
 import type {
+  AdminAccount,
   DashboardProject,
   DashboardSectionKey,
   DashboardSections,
@@ -25,10 +32,11 @@ import type {
   FeatureIconKey,
   MediaAsset,
 } from "@/lib/content/types";
-import type { IconKey } from "@/data/site";
+import { getSocialPlatformLabel, socialPlatformOptions, type IconKey } from "@/data/site";
 
 type DashboardShellProps = {
   activeTab: DashboardTabKey;
+  currentAdmin: AdminAccount;
   initialSnapshot: DashboardSnapshot;
 };
 
@@ -61,6 +69,65 @@ const contentIconOptions = iconOptions.filter(
     option.value !== "file",
 );
 
+const defaultSocialLink = {
+  platform: socialPlatformOptions[0].value,
+  label: socialPlatformOptions[0].label,
+  href: "",
+};
+
+const confirmedDeleteButtons = new WeakSet<HTMLButtonElement>();
+
+function showSaveToast() {
+  void Swal.fire({
+    toast: true,
+    position: "top-end",
+    icon: "success",
+    title: "تم الحفظ بنجاح",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    background: "#16a34a",
+    color: "#ffffff",
+    iconColor: "#ffffff",
+  });
+}
+
+async function confirmDelete() {
+  const result = await Swal.fire({
+    title: "تأكيد الحذف",
+    text: "هل أنت متأكد من تنفيذ عملية الحذف؟",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "نعم، احذف",
+    cancelButtonText: "إلغاء",
+    confirmButtonColor: "#dc2626",
+    cancelButtonColor: "#64748b",
+    reverseButtons: true,
+  });
+
+  return result.isConfirmed;
+}
+
+function renderIconOption(value: string, selected = false) {
+  const option = iconOptions.find((item) => item.value === value) ?? contentIconOptions.find((item) => item.value === value);
+
+  if (!option) {
+    return null;
+  }
+
+  return <FeatureIconSelectOption label={option.label} name={option.value} selected={selected} />;
+}
+
+function renderSelectedIconOption(value: string) {
+  const option = iconOptions.find((item) => item.value === value) ?? contentIconOptions.find((item) => item.value === value);
+
+  if (!option) {
+    return <span className="text-text-muted">{value}</span>;
+  }
+
+  return <FeatureIconSelectValue label={option.label} name={option.value} />;
+}
+
 function getErrorMessage(error: unknown) {
   if (error instanceof Error) {
     return error.message;
@@ -83,16 +150,13 @@ async function requestJson<T>(url: string, init: RequestInit) {
 function Field({
   label,
   children,
-  description,
 }: {
   label: string;
   children: React.ReactNode;
-  description?: string;
 }) {
   return (
     <label className="block space-y-2">
       <span className="text-sm font-semibold text-text">{label}</span>
-      {description ? <p className="text-xs leading-6 text-text-muted">{description}</p> : null}
       {children}
     </label>
   );
@@ -116,29 +180,17 @@ function Textarea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
   );
 }
 
-function Select(props: React.SelectHTMLAttributes<HTMLSelectElement>) {
-  return (
-    <select
-      {...props}
-      className={`w-full rounded-2xl border border-line bg-black/20 px-4 py-3 text-sm text-text outline-none transition focus:border-primary/60 ${props.className ?? ""}`}
-    />
-  );
-}
-
 function EditorCard({
   title,
-  description,
   children,
 }: {
   title: string;
-  description?: string;
   children: React.ReactNode;
 }) {
   return (
     <section className="panel px-5 py-5 md:px-6">
       <div className="mb-5">
         <h2 className="font-display text-2xl font-bold text-text">{title}</h2>
-        {description ? <p className="mt-2 text-sm leading-7 text-text-muted">{description}</p> : null}
       </div>
       {children}
     </section>
@@ -213,13 +265,9 @@ function HeroEditor({
   onDeleteMedia: (id: string) => Promise<void>;
 }) {
   const { draft, setDraft, status, isPending, save } = useSectionDraft(section, onSave);
-  const selectedProject = projects.find((project) => project.slug === draft.featuredProjectSlug) ?? null;
 
   return (
-    <EditorCard
-      description="تعديل نصوص الهيرو، الإحصائيات، والمشروع الذي يتم عرضه تلقائياً في الصفحة الرئيسية."
-      title="إدارة الهيرو"
-    >
+    <EditorCard title="إدارة الهيرو">
       <div className="space-y-5">
         <div className="grid gap-4 xl:grid-cols-2">
           <Field label="العنوان الرئيسي">
@@ -444,25 +492,6 @@ function HeroEditor({
           </div>
         </EditorCard>
 
-        {selectedProject ? (
-          <EditorCard title="معاينة المشروع المختار">
-            <div className="grid gap-3 md:grid-cols-3">
-              <div className="rounded-3xl border border-line bg-black/15 p-4 text-sm text-text-muted">
-                <strong className="block text-text">الاسم</strong>
-                {selectedProject.title}
-              </div>
-              <div className="rounded-3xl border border-line bg-black/15 p-4 text-sm text-text-muted">
-                <strong className="block text-text">العنوان</strong>
-                {selectedProject.subtitle}
-              </div>
-              <div className="rounded-3xl border border-line bg-black/15 p-4 text-sm text-text-muted">
-                <strong className="block text-text">الصورة</strong>
-                {selectedProject.cardImage}
-              </div>
-            </div>
-          </EditorCard>
-        ) : null}
-
         <SaveBar isPending={isPending} onSave={save} status={status} />
       </div>
     </EditorCard>
@@ -485,7 +514,7 @@ function AboutEditor({
   const { draft, setDraft, status, isPending, save } = useSectionDraft(section, onSave);
 
   return (
-    <EditorCard description="صورة القسم ونصوصه والعناوين الفرعية والنقاط." title="إدارة من نحن">
+    <EditorCard title="إدارة من نحن">
       <div className="space-y-5">
         <div className="grid gap-4 xl:grid-cols-2">
           <Field label="Eyebrow">
@@ -568,7 +597,7 @@ function AboutEditor({
                     value={item.title}
                   />
                 </Field>
-                <Field label="الوصف" description="إذا تُرك فارغاً فلن يظهر في الواجهة العامة.">
+                <Field label="الوصف">
                   <Textarea
                     onChange={(event) =>
                       setDraft((current) => ({
@@ -682,7 +711,7 @@ function ServicesEditor({
   const { draft, setDraft, status, isPending, save } = useSectionDraft(section, onSave);
 
   return (
-    <EditorCard description="إدارة العنوان وقائمة الخدمات الهندسية والأيقونات والصور." title="إدارة الخدمات">
+    <EditorCard title="إدارة الخدمات">
       <div className="space-y-5">
         <div className="grid gap-4 xl:grid-cols-2">
           <Field label="Eyebrow">
@@ -780,6 +809,11 @@ function ServicesEditor({
                 <div className="grid gap-4">
                   <Field label="الأيقونة">
                     <Select
+                      optionLayout="grid"
+                      renderOption={(option, selected) => renderIconOption(option.value, selected)}
+                      renderSelectedOption={(option) =>
+                        option ? renderSelectedIconOption(option.value) : null
+                      }
                       onChange={(event) =>
                         setDraft((current) => ({
                           ...current,
@@ -890,7 +924,7 @@ function WorkflowEditor({
   const { draft, setDraft, status, isPending, save } = useSectionDraft(section, onSave);
 
   return (
-    <EditorCard description="النصوص الأساسية وقائمة خطوات التنفيذ." title="إدارة مسار العمل">
+    <EditorCard title="إدارة مسار العمل">
       <div className="space-y-5">
         <div className="grid gap-4 xl:grid-cols-2">
           <Field label="Eyebrow">
@@ -1017,7 +1051,7 @@ function WhyEditor({
   const { draft, setDraft, status, isPending, save } = useSectionDraft(section, onSave);
 
   return (
-    <EditorCard description="بطاقات لماذا رونق مع الأيقونات والنصوص." title="إدارة لماذا رونق">
+    <EditorCard title="إدارة لماذا رونق">
       <div className="space-y-5">
         <div className="grid gap-4 xl:grid-cols-3">
           <Field label="Eyebrow">
@@ -1072,6 +1106,11 @@ function WhyEditor({
               </Field>
               <Field label="الأيقونة">
                 <Select
+                  optionLayout="grid"
+                  renderOption={(option, selected) => renderIconOption(option.value, selected)}
+                  renderSelectedOption={(option) =>
+                    option ? renderSelectedIconOption(option.value) : null
+                  }
                   onChange={(event) =>
                     setDraft((current) => ({
                       ...current,
@@ -1139,7 +1178,7 @@ function ValuesEditor({
   const { draft, setDraft, status, isPending, save } = useSectionDraft(section, onSave);
 
   return (
-    <EditorCard description="العنوان والوصف وقائمة القيم الجوهرية." title="إدارة القيم الجوهرية">
+    <EditorCard title="إدارة القيم الجوهرية">
       <div className="space-y-5">
         <div className="grid gap-4 xl:grid-cols-3">
           <Field label="Eyebrow">
@@ -1201,6 +1240,11 @@ function ValuesEditor({
               </Field>
               <Field label="الأيقونة">
                 <Select
+                  optionLayout="grid"
+                  renderOption={(option, selected) => renderIconOption(option.value, selected)}
+                  renderSelectedOption={(option) =>
+                    option ? renderSelectedIconOption(option.value) : null
+                  }
                   onChange={(event) =>
                     setDraft((current) => ({
                       ...current,
@@ -1268,7 +1312,7 @@ function FaqEditor({
   const { draft, setDraft, status, isPending, save } = useSectionDraft(section, onSave);
 
   return (
-    <EditorCard description="إضافة الأسئلة والأجوبة أو حذفها." title="إدارة الأسئلة الشائعة">
+    <EditorCard title="إدارة الأسئلة الشائعة">
       <div className="space-y-5">
         <div className="grid gap-4 xl:grid-cols-2">
           <Field label="Eyebrow">
@@ -1363,7 +1407,7 @@ function ContactEditor({
   const { draft, setDraft, status, isPending, save } = useSectionDraft(section, onSave);
 
   return (
-    <EditorCard description="نصوص تواصل معنا ومعلومات الاتصال وساعات العمل." title="إدارة تواصل معنا">
+    <EditorCard title="إدارة تواصل معنا">
       <div className="grid gap-5 xl:grid-cols-2">
         <Field label="Eyebrow">
           <Input
@@ -1477,7 +1521,7 @@ function FooterEditor({
   const { draft, setDraft, status, isPending, save } = useSectionDraft(section, onSave);
 
   return (
-    <EditorCard description="أيقونة الفوتر والنص والخدمات والترويسات." title="إدارة الفوتر">
+    <EditorCard title="إدارة الفوتر">
       <div className="space-y-5">
         <MediaPickerField
           label="أيقونة الفوتر"
@@ -1492,38 +1536,6 @@ function FooterEditor({
             onChange={(event) => setDraft((current) => ({ ...current, description: event.target.value }))}
             rows={4}
             value={draft.description}
-          />
-        </Field>
-        <div className="grid gap-4 xl:grid-cols-2">
-          <Field label="عنوان الروابط">
-            <Input
-              onChange={(event) => setDraft((current) => ({ ...current, quickLinksTitle: event.target.value }))}
-              value={draft.quickLinksTitle}
-            />
-          </Field>
-          <Field label="عنوان الخدمات">
-            <Input
-              onChange={(event) => setDraft((current) => ({ ...current, servicesTitle: event.target.value }))}
-              value={draft.servicesTitle}
-            />
-          </Field>
-          <Field label="عنوان التواصل">
-            <Input
-              onChange={(event) => setDraft((current) => ({ ...current, contactTitle: event.target.value }))}
-              value={draft.contactTitle}
-            />
-          </Field>
-          <Field label="رابط المشاريع">
-            <Input
-              onChange={(event) => setDraft((current) => ({ ...current, projectsLinkLabel: event.target.value }))}
-              value={draft.projectsLinkLabel}
-            />
-          </Field>
-        </div>
-        <Field label="حقوق النشر">
-          <Input
-            onChange={(event) => setDraft((current) => ({ ...current, copyrightText: event.target.value }))}
-            value={draft.copyrightText}
           />
         </Field>
         <EditorCard title="خدمات الفوتر">
@@ -1591,7 +1603,7 @@ function GeneralSettingsEditor({
   const { draft, setDraft, status, isPending, save } = useSectionDraft(section, onSave);
 
   return (
-    <EditorCard description="شعار الموقع، الـ favicon، وصف الموقع ووسائل التواصل." title="الإعدادات العامة">
+    <EditorCard title="الإعدادات العامة">
       <div className="space-y-5">
         <div className="grid gap-4 xl:grid-cols-2">
           <Field label="اسم الموقع">
@@ -1626,6 +1638,14 @@ function GeneralSettingsEditor({
             value={draft.description}
           />
         </Field>
+        <Field label="رابط واتس اب">
+          <Input
+            dir="ltr"
+            onChange={(event) => setDraft((current) => ({ ...current, whatsappUrl: event.target.value }))}
+            placeholder="https://wa.me/9665XXXXXXXX?text=..."
+            value={draft.whatsappUrl ?? ""}
+          />
+        </Field>
         <div className="grid gap-4 xl:grid-cols-2">
           <MediaPickerField
             label="لوغو الموقع"
@@ -1647,32 +1667,32 @@ function GeneralSettingsEditor({
         <EditorCard title="وسائل التواصل الاجتماعي">
           <div className="space-y-4">
             {draft.socialLinks.map((item, index) => (
-              <div className="grid gap-4 rounded-[1.75rem] border border-line bg-black/15 p-4 xl:grid-cols-[0.7fr_0.7fr_1.6fr_auto]" key={`${item.label}-${index}`}>
+              <div className="grid gap-4 rounded-[1.75rem] border border-line bg-black/15 p-4 xl:grid-cols-[0.8fr_1.6fr_auto]" key={`${item.platform}-${index}`}>
                 <Field label="المنصة">
-                  <Input
+                  <Select
                     onChange={(event) =>
                       setDraft((current) => ({
                         ...current,
                         socialLinks: current.socialLinks.map((value, itemIndex) =>
-                          itemIndex === index ? { ...value, platform: event.target.value } : value,
+                          itemIndex === index
+                            ? {
+                                ...value,
+                                platform: event.target.value,
+                                label: getSocialPlatformLabel(event.target.value),
+                              }
+                            : value,
                         ),
                       }))
                     }
                     value={item.platform}
-                  />
-                </Field>
-                <Field label="الاسم">
-                  <Input
-                    onChange={(event) =>
-                      setDraft((current) => ({
-                        ...current,
-                        socialLinks: current.socialLinks.map((value, itemIndex) =>
-                          itemIndex === index ? { ...value, label: event.target.value } : value,
-                        ),
-                      }))
-                    }
-                    value={item.label}
-                  />
+                  >
+                    <option value="">اختر منصة</option>
+                    {socialPlatformOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </Select>
                 </Field>
                 <Field label="الرابط">
                   <Input
@@ -1695,7 +1715,7 @@ function GeneralSettingsEditor({
                       socialLinks:
                         current.socialLinks.length > 1
                           ? current.socialLinks.filter((_, itemIndex) => itemIndex !== index)
-                          : [{ label: "", href: "", platform: "" }],
+                          : [{ ...defaultSocialLink }],
                     }))
                   }
                   type="button"
@@ -1710,7 +1730,7 @@ function GeneralSettingsEditor({
               onClick={() =>
                 setDraft((current) => ({
                   ...current,
-                  socialLinks: [...current.socialLinks, { label: "", href: "", platform: "" }],
+                  socialLinks: [...current.socialLinks, { ...defaultSocialLink }],
                 }))
               }
               type="button"
@@ -1760,10 +1780,9 @@ function ProjectsEditor({
 
   return (
     <>
-      <EditorCard description="إدارة جميع المشاريع، إضافة مشروع بمودال كامل، وتحديد 4 مشاريع للرئيسية." title="إدارة المشاريع">
+      <EditorCard title="إدارة المشاريع">
         <div className="space-y-5">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm text-text-muted">يمكنك الإضافة أو التعديل أو الحذف، وتحديد المشاريع التي تظهر في الصفحة الرئيسية.</p>
             <button
               className="inline-flex min-h-12 items-center gap-2 rounded-2xl border border-primary bg-primary px-5 text-sm font-semibold text-[#53211c] transition hover:bg-primary-strong"
               onClick={() => {
@@ -1858,10 +1877,6 @@ function ProjectsEditor({
                     <button
                       className="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl border border-red-400/30 bg-red-500/10 px-4 text-sm font-semibold text-red-200 transition"
                       onClick={async () => {
-                        if (!window.confirm(`حذف المشروع "${project.title}"؟`)) {
-                          return;
-                        }
-
                         await onDeleteProject(project.id);
                       }}
                       type="button"
@@ -1919,7 +1934,7 @@ function MediaEditor({
   }
 
   return (
-    <EditorCard description="كل الوسائط المرفوعة للموقع مع إمكانية الحذف والرفع ونسخ الرابط." title="مكتبة الوسائط">
+    <EditorCard title="مكتبة الوسائط">
       <div className="space-y-5">
         <div className="grid gap-3 rounded-[1.5rem] border border-line bg-black/15 p-4 md:grid-cols-[1fr_auto]">
           <Input
@@ -1943,7 +1958,7 @@ function MediaEditor({
               type="file"
             />
             <Plus className="size-4" />
-            {isUploading ? "جارٍ الرفع..." : "رفع وسيط"}
+            {isUploading ? "جارٍ الرفع..." : "رفع صورة"}
           </label>
         </div>
 
@@ -1989,13 +2004,195 @@ function MediaEditor({
   );
 }
 
-export function DashboardShell({ activeTab, initialSnapshot }: DashboardShellProps) {
+function AdminsEditor({
+  admins,
+  currentAdmin,
+  onCreateAdmin,
+  onUpdateAdmin,
+}: {
+  admins: AdminAccount[];
+  currentAdmin: AdminAccount;
+  onCreateAdmin: (value: { email: string; name: string; password: string }) => Promise<void>;
+  onUpdateAdmin: (
+    id: string,
+    value: { email: string; name: string; password?: string },
+  ) => Promise<void>;
+}) {
+  const current = admins.find((admin) => admin.id === currentAdmin.id) ?? currentAdmin;
+  const [currentDraft, setCurrentDraft] = useState({
+    email: current.email,
+    name: current.name,
+    password: "",
+  });
+  const [newDraft, setNewDraft] = useState({
+    email: "",
+    name: "",
+    password: "",
+  });
+  const [status, setStatus] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
+
+  function saveCurrentAdmin() {
+    startTransition(async () => {
+      try {
+        setStatus("جارٍ حفظ بيانات الأدمن...");
+        await onUpdateAdmin(current.id, {
+          email: currentDraft.email,
+          name: currentDraft.name,
+          password: currentDraft.password || undefined,
+        });
+        setCurrentDraft((draft) => ({ ...draft, password: "" }));
+        setStatus("تم حفظ بيانات الأدمن.");
+      } catch (error) {
+        setStatus(getErrorMessage(error));
+      }
+    });
+  }
+
+  function createAdmin() {
+    startTransition(async () => {
+      try {
+        setStatus("جارٍ إضافة الأدمن...");
+        await onCreateAdmin(newDraft);
+        setNewDraft({ email: "", name: "", password: "" });
+        setStatus("تمت إضافة الأدمن.");
+      } catch (error) {
+        setStatus(getErrorMessage(error));
+      }
+    });
+  }
+
+  return (
+    <EditorCard title="إدارة الأدمن">
+      <div className="space-y-5">
+        <div className="grid gap-4 xl:grid-cols-3">
+          <Field label="البريد الحالي">
+            <Input
+              onChange={(event) => setCurrentDraft((draft) => ({ ...draft, email: event.target.value }))}
+              type="email"
+              value={currentDraft.email}
+            />
+          </Field>
+          <Field label="الاسم">
+            <Input
+              onChange={(event) => setCurrentDraft((draft) => ({ ...draft, name: event.target.value }))}
+              value={currentDraft.name}
+            />
+          </Field>
+          <Field label="كلمة مرور جديدة">
+            <Input
+              onChange={(event) => setCurrentDraft((draft) => ({ ...draft, password: event.target.value }))}
+              placeholder="اتركها فارغة بدون تغيير"
+              type="password"
+              value={currentDraft.password}
+            />
+          </Field>
+        </div>
+        <button
+          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-primary bg-primary px-5 text-sm font-semibold text-[#53211c] transition hover:bg-primary-strong disabled:cursor-not-allowed disabled:opacity-70"
+          disabled={isPending}
+          onClick={saveCurrentAdmin}
+          type="button"
+        >
+          <Save className="size-4" />
+          حفظ بيانات الأدمن الحالي
+        </button>
+
+        <EditorCard title="إضافة أدمن جديد">
+          <div className="grid gap-4 xl:grid-cols-3">
+            <Field label="البريد الإلكتروني">
+              <Input
+                onChange={(event) => setNewDraft((draft) => ({ ...draft, email: event.target.value }))}
+                type="email"
+                value={newDraft.email}
+              />
+            </Field>
+            <Field label="الاسم">
+              <Input
+                onChange={(event) => setNewDraft((draft) => ({ ...draft, name: event.target.value }))}
+                value={newDraft.name}
+              />
+            </Field>
+            <Field label="كلمة المرور">
+              <Input
+                onChange={(event) => setNewDraft((draft) => ({ ...draft, password: event.target.value }))}
+                type="password"
+                value={newDraft.password}
+              />
+            </Field>
+          </div>
+          <button
+            className="mt-4 inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-primary bg-primary px-5 text-sm font-semibold text-[#53211c] transition hover:bg-primary-strong disabled:cursor-not-allowed disabled:opacity-70"
+            disabled={isPending}
+            onClick={createAdmin}
+            type="button"
+          >
+            <Plus className="size-4" />
+            إضافة أدمن
+          </button>
+        </EditorCard>
+
+        <div className="rounded-[1.5rem] border border-line bg-black/15 p-4">
+          <h3 className="mb-4 font-display text-xl font-bold text-text">الأدمن المسجلون</h3>
+          <div className="space-y-3">
+            {admins.map((admin) => (
+              <div className="grid gap-2 rounded-2xl border border-line/70 p-4 md:grid-cols-[1fr_1fr_auto]" key={admin.id}>
+                <p className="text-sm font-semibold text-text">{admin.name || "Admin"}</p>
+                <p className="text-sm text-text-muted">{admin.email}</p>
+                <p className="text-xs text-primary">{admin.id === currentAdmin.id ? "الحساب الحالي" : "أدمن"}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <p className="text-sm text-text-muted">{status ?? "يمكنك تعديل بيانات حسابك أو إضافة أدمن جديد."}</p>
+      </div>
+    </EditorCard>
+  );
+}
+
+export function DashboardShell({ activeTab, currentAdmin, initialSnapshot }: DashboardShellProps) {
   const [snapshot, setSnapshot] = useState(initialSnapshot);
 
   const activeTabMeta = useMemo(
     () => dashboardTabs.find((tab) => tab.key === activeTab) ?? dashboardTabs[0],
     [activeTab],
   );
+
+  function handleDashboardClickCapture(event: React.MouseEvent<HTMLDivElement>) {
+    const target = event.target;
+
+    if (!(target instanceof Element)) {
+      return;
+    }
+
+    const button = target.closest("button");
+
+    if (!button || !event.currentTarget.contains(button) || button.disabled) {
+      return;
+    }
+
+    if (confirmedDeleteButtons.has(button)) {
+      confirmedDeleteButtons.delete(button);
+      return;
+    }
+
+    if (!button.textContent?.includes("حذف")) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    void confirmDelete().then((confirmed) => {
+      if (!confirmed) {
+        return;
+      }
+
+      confirmedDeleteButtons.add(button);
+      button.click();
+    });
+  }
 
   async function saveSection<K extends DashboardSectionKey>(
     key: K,
@@ -2016,6 +2213,8 @@ export function DashboardShell({ activeTab, initialSnapshot }: DashboardShellPro
         [key]: data,
       },
     }));
+
+    showSaveToast();
 
     return data;
   }
@@ -2073,6 +2272,8 @@ export function DashboardShell({ activeTab, initialSnapshot }: DashboardShellPro
         projects: [saved, ...others].sort((left, right) => left.title.localeCompare(right.title)),
       };
     });
+
+    showSaveToast();
   }
 
   async function deleteProjectById(id: string) {
@@ -2099,18 +2300,69 @@ export function DashboardShell({ activeTab, initialSnapshot }: DashboardShellPro
       ...current,
       projects,
     }));
+
+    showSaveToast();
   }
 
-  const sectionKey = getSectionKeyByTab(activeTab);
+  async function createAdmin(value: { email: string; name: string; password: string }) {
+    const admin = await requestJson<AdminAccount | null>("/api/admin/admins", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(value),
+    });
+
+    if (!admin) {
+      return;
+    }
+
+    setSnapshot((current) => ({
+      ...current,
+      admins: [...current.admins, admin],
+    }));
+
+    showSaveToast();
+  }
+
+  async function updateAdmin(
+    id: string,
+    value: { email: string; name: string; password?: string },
+  ) {
+    const admin = await requestJson<AdminAccount | null>(`/api/admin/admins/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(value),
+    });
+
+    if (!admin) {
+      return;
+    }
+
+    setSnapshot((current) => ({
+      ...current,
+      admins: current.admins.map((item) => (item.id === admin.id ? admin : item)),
+    }));
+
+    showSaveToast();
+  }
+
+  async function logout() {
+    await fetch("/api/admin/logout", {
+      method: "POST",
+    });
+    window.location.href = "/admin-rq";
+  }
 
   return (
-    <div className="app-container py-8">
+    <div className="app-container py-8" onClickCapture={handleDashboardClickCapture}>
       <div className="grid gap-6 lg:grid-cols-[18rem_1fr]">
         <aside className="panel h-fit px-4 py-4 lg:sticky lg:top-6">
           <div className="border-b border-line/70 pb-4">
             <p className="font-accent text-xs uppercase tracking-[0.35em] text-primary">Admin</p>
             <h1 className="mt-2 font-display text-2xl font-bold text-text">Rawnaq Dashboard</h1>
-            <p className="mt-2 text-sm leading-7 text-text-muted">إدارة الصفحة الرئيسية والمشاريع والإعدادات والوسائط من مكان واحد.</p>
           </div>
           <nav className="mt-4 flex gap-2 overflow-x-auto lg:flex-col">
             {dashboardTabs.map((tab) => (
@@ -2131,13 +2383,20 @@ export function DashboardShell({ activeTab, initialSnapshot }: DashboardShellPro
 
         <div className="space-y-5">
           <div className="panel px-5 py-5 md:px-6">
-            <p className="font-accent text-xs uppercase tracking-[0.35em] text-primary">Active tab</p>
-            <h2 className="mt-2 font-display text-3xl font-bold text-text">{activeTabMeta.label}</h2>
-            <p className="mt-2 text-sm leading-7 text-text-muted">
-              {sectionKey
-                ? "التغييرات هنا تُكتب مباشرة في قاعدة البيانات المحلية، ثم تنعكس على الواجهة العامة."
-                : "هذه الواجهة مخصصة لإدارة المشاريع أو الوسائط، وليس لقسم ثابت واحد."}
-            </p>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="font-accent text-xs uppercase tracking-[0.35em] text-primary">Active tab</p>
+                <h2 className="mt-2 font-display text-3xl font-bold text-text">{activeTabMeta.label}</h2>
+              </div>
+              <button
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl border border-line bg-white/5 px-4 text-sm font-semibold text-text transition hover:text-primary"
+                onClick={logout}
+                type="button"
+              >
+                <LogOut className="size-4" />
+                خروج
+              </button>
+            </div>
           </div>
 
           {activeTab === "hero" ? (
@@ -2223,6 +2482,15 @@ export function DashboardShell({ activeTab, initialSnapshot }: DashboardShellPro
               onSave={(value) => saveSection("generalSettings", value)}
               onUploadMedia={uploadMedia}
               section={snapshot.sections.generalSettings}
+            />
+          ) : null}
+
+          {activeTab === "admins" ? (
+            <AdminsEditor
+              admins={snapshot.admins}
+              currentAdmin={currentAdmin}
+              onCreateAdmin={createAdmin}
+              onUpdateAdmin={updateAdmin}
             />
           ) : null}
 

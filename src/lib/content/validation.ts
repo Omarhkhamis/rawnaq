@@ -87,6 +87,7 @@ const generalSettingsSchema = z.object({
   logoPath: z.string(),
   faviconPath: z.string(),
   quoteButtonLabel: z.string(),
+  whatsappUrl: z.string().optional().default(""),
   socialLinks: z.array(socialLinkSchema),
 });
 

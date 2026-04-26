@@ -1,24 +1,29 @@
 import { copyFileSync, existsSync, mkdirSync, statSync } from "node:fs";
 import path from "node:path";
+import { Pool } from "pg";
 
 import {
   initialMediaBlueprint,
   seedProjects,
   seedSections,
 } from "@/lib/content/seed";
+import { hashPassword } from "@/lib/admin-password";
 import type { DashboardProject, DashboardSectionKey } from "@/lib/content/types";
-import type { PGlite as PGliteType } from "@electric-sql/pglite";
 
-type DbInstance = PGliteType;
+type DbQueryResult<T> = {
+  rows: T[];
+};
+
+type DbInstance = {
+  exec: (query: string) => Promise<void>;
+  query: <T>(query: string, values?: readonly unknown[]) => Promise<DbQueryResult<T>>;
+};
 
 declare global {
   var __rawnaqDb: Promise<DbInstance> | undefined;
 }
 
-const DATABASE_PATH = path.resolve(
-  /* turbopackIgnore: true */ process.cwd(),
-  process.env.DATABASE_PATH ?? ".data/postgres",
-);
+const DATABASE_URL = process.env.DATABASE_URL;
 
 const UPLOADS_DIR = path.resolve(
   /* turbopackIgnore: true */ process.cwd(),
@@ -80,6 +85,15 @@ async function createSchema(db: DbInstance) {
       url TEXT NOT NULL,
       alt_text TEXT NOT NULL DEFAULT '',
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS admin_accounts (
+      id TEXT PRIMARY KEY,
+      email TEXT NOT NULL UNIQUE,
+      name TEXT NOT NULL DEFAULT '',
+      password_hash TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
   `);
 }
@@ -210,19 +224,64 @@ async function seedProjectsIfEmpty(db: DbInstance) {
   }
 }
 
+async function seedDefaultAdminIfEmpty(db: DbInstance) {
+  const existing = await db.query<{ total: number }>(
+    "SELECT COUNT(*)::int AS total FROM admin_accounts",
+  );
+
+  if ((existing.rows[0]?.total ?? 0) > 0) {
+    return;
+  }
+
+  await db.query(
+    `
+      INSERT INTO admin_accounts (id, email, name, password_hash)
+      VALUES ($1, $2, $3, $4)
+    `,
+    [
+      crypto.randomUUID(),
+      "admin@admin.com",
+      "Admin",
+      await hashPassword("123456"),
+    ],
+  );
+}
+
 async function seedDatabase(db: DbInstance) {
   await copySeedMediaIfNeeded(db);
   await seedSectionsIfEmpty(db);
   await seedProjectsIfEmpty(db);
+  await seedDefaultAdminIfEmpty(db);
+}
+
+async function createDbClient() {
+  if (!DATABASE_URL) {
+    throw new Error("DATABASE_URL is not configured. Add it to your .env file.");
+  }
+
+  const pool = new Pool({
+    connectionString: DATABASE_URL,
+  });
+
+  await pool.query("SELECT 1");
+
+  return {
+    exec: async (query: string) => {
+      await pool.query(query);
+    },
+    query: async <T>(query: string, values: readonly unknown[] = []) => {
+      const result = await pool.query(query, [...values] as unknown[]);
+      return {
+        rows: result.rows as T[],
+      };
+    },
+  } satisfies DbInstance;
 }
 
 async function initialiseDb() {
-  ensureDirectory(path.dirname(DATABASE_PATH));
   ensureDirectory(UPLOADS_DIR);
 
-  const { PGlite } = await import("@electric-sql/pglite");
-  const db = new PGlite(DATABASE_PATH);
-
+  const db = await createDbClient();
   await createSchema(db);
   await seedDatabase(db);
 

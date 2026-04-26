@@ -2,8 +2,10 @@ import { rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { navigation, projectCategories } from "@/data/site";
+import { hashPassword, verifyPassword } from "@/lib/admin-password";
 import { getDb, getUploadsDir } from "@/lib/content/db";
 import type {
+  AdminAccount,
   DashboardProject,
   DashboardSectionKey,
   DashboardSections,
@@ -56,6 +58,15 @@ type MediaRow = {
   url: string;
   alt_text: string;
   created_at: string;
+};
+
+type AdminRow = {
+  id: string;
+  email: string;
+  name: string;
+  password_hash: string;
+  created_at: string;
+  updated_at: string;
 };
 
 function parseJson<T>(value: unknown): T {
@@ -114,6 +125,16 @@ function mapMedia(row: MediaRow): MediaAsset {
   };
 }
 
+function mapAdmin(row: AdminRow): AdminAccount {
+  return {
+    id: row.id,
+    email: row.email,
+    name: row.name,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
 async function getSections(): Promise<DashboardSections> {
   const db = await getDb();
   const sections = await db.query<SectionRow>(
@@ -158,18 +179,115 @@ export async function getMediaAssets() {
   return result.rows.map(mapMedia);
 }
 
+export async function getAdminAccounts() {
+  const db = await getDb();
+  const result = await db.query<AdminRow>(
+    `
+      SELECT *
+      FROM admin_accounts
+      ORDER BY created_at ASC
+    `,
+  );
+
+  return result.rows.map(mapAdmin);
+}
+
+export async function getAdminAccountById(id: string) {
+  const db = await getDb();
+  const result = await db.query<AdminRow>(
+    "SELECT * FROM admin_accounts WHERE id = $1 LIMIT 1",
+    [id],
+  );
+  const row = result.rows[0];
+
+  return row ? mapAdmin(row) : null;
+}
+
+export async function verifyAdminCredentials(email: string, password: string) {
+  const db = await getDb();
+  const result = await db.query<AdminRow>(
+    "SELECT * FROM admin_accounts WHERE lower(email) = lower($1) LIMIT 1",
+    [email.trim()],
+  );
+  const admin = result.rows[0];
+
+  if (!admin || !(await verifyPassword(password, admin.password_hash))) {
+    return null;
+  }
+
+  return mapAdmin(admin);
+}
+
 export async function getDashboardSnapshot(): Promise<DashboardSnapshot> {
-  const [sections, projects, media] = await Promise.all([
+  const [sections, projects, media, admins] = await Promise.all([
     getSections(),
     getProjects(),
     getMediaAssets(),
+    getAdminAccounts(),
   ]);
 
   return {
     sections,
     projects,
     media,
+    admins,
   };
+}
+
+export async function createAdminAccount(input: {
+  email: string;
+  name: string;
+  password: string;
+}) {
+  const db = await getDb();
+  const email = input.email.trim().toLowerCase();
+  const name = input.name.trim() || email;
+  const id = crypto.randomUUID();
+
+  await db.query(
+    `
+      INSERT INTO admin_accounts (id, email, name, password_hash)
+      VALUES ($1, $2, $3, $4)
+    `,
+    [id, email, name, await hashPassword(input.password)],
+  );
+
+  return getAdminAccountById(id);
+}
+
+export async function updateAdminAccount(
+  id: string,
+  input: {
+    email: string;
+    name: string;
+    password?: string;
+  },
+) {
+  const db = await getDb();
+  const email = input.email.trim().toLowerCase();
+  const name = input.name.trim() || email;
+
+  if (input.password) {
+    await db.query(
+      `
+        UPDATE admin_accounts
+        SET email = $1, name = $2, password_hash = $3, updated_at = NOW()
+        WHERE id = $4
+      `,
+      [email, name, await hashPassword(input.password), id],
+    );
+  } else {
+    await db.query(
+      `
+        UPDATE admin_accounts
+        SET email = $1, name = $2, updated_at = NOW()
+        WHERE id = $3
+      `,
+      [email, name, id],
+    );
+  }
+
+  return getAdminAccountById(id);
 }
 
 export async function getPublicSiteContent(): Promise<PublicSiteContent> {

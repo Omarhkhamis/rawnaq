@@ -90,6 +90,16 @@ select {
   font: inherit;
 }
 
+.form-select {
+  color-scheme: dark;
+}
+
+.form-select option,
+.form-select optgroup {
+  background-color: var(--background-soft);
+  color: var(--text);
+}
+
 ::selection {
   background: rgba(255, 180, 171, 0.9);
   color: #53211c;

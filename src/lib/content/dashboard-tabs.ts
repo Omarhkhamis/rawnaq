@@ -1,5 +1,5 @@
 export const dashboardTabs = [
-  { key: "hero", label: "Hero" },
+  { key: "hero", label: "القسم الرئيسي" },
   { key: "about", label: "من نحن" },
   { key: "services", label: "الخدمات" },
   { key: "workflow", label: "مسار العمل" },
@@ -9,8 +9,9 @@ export const dashboardTabs = [
   { key: "faq", label: "الأسئلة الشائعة" },
   { key: "contact", label: "تواصل معنا" },
   { key: "footer", label: "الفوتر" },
-  { key: "general-settings", label: "General settings" },
-  { key: "media", label: "Media" },
+  { key: "general-settings", label: "إعدادات عامة" },
+  { key: "admins", label: "الأدمن" },
+  { key: "media", label: "المعرض" },
 ] as const;
 
 export type DashboardTabKey = (typeof dashboardTabs)[number]["key"];
@@ -45,4 +46,3 @@ export function getSectionKeyByTab(tab: DashboardTabKey) {
       return null;
   }
 }
-

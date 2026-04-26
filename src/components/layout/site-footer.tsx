@@ -6,6 +6,7 @@ import type {
   FooterSectionData,
   GeneralSettingsData,
 } from "@/lib/content/types";
+import { getSocialPlatformLabel } from "@/data/site";
 import { SiteBrand } from "@/components/layout/site-brand";
 
 type SocialIconProps = {
@@ -14,6 +15,14 @@ type SocialIconProps = {
 };
 
 function SocialIcon({ platform, className = "size-4" }: SocialIconProps) {
+  if (platform === "facebook") {
+    return (
+      <svg aria-hidden="true" className={className} fill="currentColor" viewBox="0 0 24 24">
+        <path d="M13.6 21v-7.2h2.4l.4-2.8h-2.8V9.2c0-.8.3-1.4 1.5-1.4h1.4V5.3c-.3 0-1-.1-1.9-.1-2.8 0-4.4 1.7-4.4 4.6V11H7.8v2.8h2.4V21h3.4Z" />
+      </svg>
+    );
+  }
+
   if (platform === "instagram") {
     return (
       <svg aria-hidden="true" className={className} fill="none" viewBox="0 0 24 24">
@@ -36,6 +45,14 @@ function SocialIcon({ platform, className = "size-4" }: SocialIconProps) {
     return (
       <svg aria-hidden="true" className={className} fill="currentColor" viewBox="0 0 24 24">
         <path d="M15.5 3c.3 2.4 1.7 3.8 4 4v3.1a8 8 0 0 1-4-1.1v5.7c0 4-2.5 6.3-6.1 6.3-3.1 0-5.3-2.1-5.3-5.1s2.3-5.1 5.2-5.1c.5 0 1 .1 1.4.2v3.3a3 3 0 0 0-1.3-.3c-1.2 0-2.1.7-2.1 1.9 0 1.1.8 1.9 2 1.9 1.3 0 2.2-.7 2.2-2.4V3h4Z" />
+      </svg>
+    );
+  }
+
+  if (platform === "linkedin") {
+    return (
+      <svg aria-hidden="true" className={className} fill="currentColor" viewBox="0 0 24 24">
+        <path d="M6.1 8.2a1.9 1.9 0 1 1 0-3.8 1.9 1.9 0 0 1 0 3.8ZM4.5 9.7h3.2V20H4.5V9.7Zm5.2 0h3v1.4h.1c.4-.8 1.5-1.7 3.2-1.7 3.4 0 4 2.2 4 5.2V20h-3.2v-4.8c0-1.1 0-2.6-1.6-2.6s-1.8 1.2-1.8 2.5V20H9.7V9.7Z" />
       </svg>
     );
   }
@@ -145,19 +162,25 @@ export function SiteFooter({
             </ul>
 
             <div className="mt-6 flex items-center justify-center gap-2 md:justify-start">
-              {generalSettings.socialLinks.map((item) => (
+              {generalSettings.socialLinks
+                .filter((item) => item.href.trim() && item.platform.trim())
+                .map((item) => {
+                  const label = item.label || getSocialPlatformLabel(item.platform) || item.href;
+
+                  return (
                 <Link
-                  aria-label={item.label}
+                  aria-label={label}
                   className="inline-flex size-10 items-center justify-center rounded-full border border-line bg-white/5 text-text-muted transition-colors duration-300 hover:border-primary/60 hover:bg-primary/12 hover:text-primary"
                   href={item.href}
-                  key={item.label}
+                  key={`${item.platform}-${item.href}`}
                   rel="noreferrer"
                   target="_blank"
-                  title={item.label}
+                  title={label}
                 >
                   <SocialIcon platform={item.platform} />
                 </Link>
-              ))}
+                  );
+                })}
             </div>
           </div>
         </div>

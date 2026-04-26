@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model content_sections {
+  key        String   @id
+  value      Json     @default("{}")
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model media_assets {
+  id            String   @id
+  file_name     String
+  original_name String
+  mime_type     String
+  size_bytes    Int      @default(0)
+  path          String
+  url           String
+  alt_text      String   @default("")
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model admin_accounts {
+  id            String   @id
+  email         String   @unique
+  name          String   @default("")
+  password_hash String
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime @default(now()) @db.Timestamptz(6)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model projects {
+  id                String   @id
+  slug              String   @unique
+  category          String
+  category_label    String
+  title             String
+  subtitle          String   @default("")
+  excerpt           String   @default("")
+  hero_label        String   @default("")
+  location          String   @default("")
+  area              String   @default("")
+  duration          String   @default("")
+  status            String   @default("")
+  year              String   @default("")
+  hero_image        String   @default("")
+  hero_alt          String   @default("")
+  card_image        String   @default("")
+  overview          String   @default("")
+  challenge         String   @default("")
+  solution          String   @default("")
+  deliverables      Json     @default("[]")
+  gallery           Json     @default("[]")
+  materials         Json     @default("[]")
+  results           Json     @default("[]")
+  award_title       String   @default("")
+  award_description String   @default("")
+  home_order        Int?     @unique
+  created_at        DateTime @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime @default(now()) @db.Timestamptz(6)
+}
